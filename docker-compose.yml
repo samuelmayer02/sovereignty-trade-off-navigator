@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:/app/prisma/dev.db
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_API_URL=${LLM_API_URL:-https://generativelanguage.googleapis.com/v1beta/openai/}
+      - LLM_MODEL=${LLM_MODEL:-gemini-2.5-flash}
+      - BATCH_SIZE=${BATCH_SIZE:-20}
+      - DELAY_BETWEEN_BATCHES_MS=${DELAY_BETWEEN_BATCHES_MS:-22000}
+    volumes:
+      - prisma_data:/app/prisma
+      - ./data:/app/data
+    restart: unless-stopped
+
+volumes:
+  prisma_data:

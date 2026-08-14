@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereignty Trade-Off Navigator - Experten-Evaluation</title>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* Premium Design System based on ui-ux-pro-max guidelines */
+    :root {
+      /* Dark Theme (Default) */
+      --bg: #09090b;
+      --fg: #f4f4f5;
+      --card: #18181b;
+      --card-hover: #27272a;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #4f46e5;
+      --primary-hover: #6366f1;
+      --primary-glow: rgba(79, 70, 229, 0.15);
+      --muted: #a1a1aa;
+      --muted-bg: #27272a;
+
+      /* Likert specific colors - Dark mode */
+      --likert-1: #ef4444;
+      /* Wesentlich schlechter */
+      --likert-2: #f97316;
+      /* Schlechter */
+      --likert-3: #71717a;
+      /* Gleichwertig */
+      --likert-4: #3b82f6;
+      /* Besser */
+      --likert-5: #10b981;
+      /* Wesentlich besser */
+
+      --glass-bg: rgba(24, 24, 27, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.08);
+
+      --font-title: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-sm: 8px;
+
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme='light'] {
+      /* Light Theme */
+      --bg: #f8fafc;
+      --fg: #0f172a;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --card-border: rgba(15, 23, 42, 0.08);
+      --primary: #4f46e5;
+      --primary-hover: #3730a3;
+      --primary-glow: rgba(79, 70, 229, 0.1);
+      --muted: #475569;
+      --muted-bg: #e2e8f0;
+
+      /* Likert specific colors - Light mode */
+      --likert-1: #dc2626;
+      --likert-2: #ea580c;
+      --likert-3: #64748b;
+      --likert-4: #2563eb;
+      --likert-5: #059669;
+
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: var(--font-title);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    /* Container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    /* Header component */
+    header {
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary) 0%, #818cf8 100%);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      font-family: var(--font-title);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .project-title {
+      font-size: 1.1rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .theme-toggle {
+      background: var(--muted-bg);
+      border: 1px solid var(--card-border);
+      color: var(--fg);
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-weight: 500;
+    }
+
+    .theme-toggle:hover {
+      background: var(--card-hover);
+    }
+
+    .title-area {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title-area::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary) 0%, #818cf8 100%);
+    }
+
+    .main-title {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, var(--fg) 40%, var(--muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .main-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 720px;
+    }
+
+    /* Floating navigation bar with dropdown and progress bar */
+    .controls-nav {
+      position: sticky;
+      top: 16px;
+      z-index: 50;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 16px 24px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .select-wrapper {
+      position: relative;
+      flex-grow: 1;
+      max-width: 400px;
+    }
+
+    .phase-select {
+      width: 100%;
+      padding: 10px 16px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--fg);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      outline: none;
+    }
+
+    .phase-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .select-wrapper::after {
+      content: '▼';
+      font-size: 0.7rem;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--muted);
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-width: 150px;
+    }
+
+    .progress-bar-bg {
+      flex-grow: 1;
+      height: 8px;
+      background: var(--muted-bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, var(--primary) 0%, #818cf8 100%);
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Content Cards */
+    .section-title {
+      font-size: 1.4rem;
+      margin: 32px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--fg);
+      border-left: 3px solid var(--primary);
+      padding-left: 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .card.unanswered {
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .card.unanswered::after {
+      content: 'Ausstehend';
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .question-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--fg);
+    }
+
+    .question-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Premium Likert Representation */
+    .likert-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .likert-scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .likert-option {
+      flex: 1;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .likert-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .likert-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 8px;
+      background: var(--muted-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%;
+      min-height: 80px;
+    }
+
+    .likert-option:hover .likert-box {
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+
+    .likert-value {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--muted);
+    }
+
+    .likert-text {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    /* Style options individually based on response values */
+    .likert-option[data-val="1"] input:checked~.likert-box {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: var(--likert-1);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+    }
+
+    .likert-option[data-val="1"] input:checked~.likert-box .likert-value,
+    .likert-option[data-val="1"] input:checked~.likert-box .likert-text {
+      color: var(--likert-1);
+    }
+
+    .likert-option[data-val="2"] input:checked~.likert-box {
+      background: rgba(249, 115, 22, 0.15);
+      border-color: var(--likert-2);
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.25);
+    }
+
+    .likert-option[data-val="2"] input:checked~.likert-box .likert-value,
+    .likert-option[data-val="2"] input:checked~.likert-box .likert-text {
+      color: var(--likert-2);
+    }
+
+    .likert-option[data-val="3"] input:checked~.likert-box {
+      background: rgba(113, 113, 122, 0.15);
+      border-color: var(--likert-3);
+      box-shadow: 0 0 12px rgba(113, 113, 122, 0.25);
+    }
+
+    .likert-option[data-val="3"] input:checked~.likert-box .likert-value,
+    .likert-option[data-val="3"] input:checked~.likert-box .likert-text {
+      color: var(--likert-3);
+    }
+
+    .likert-option[data-val="4"] input:checked~.likert-box {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: var(--likert-4);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .likert-option[data-val="4"] input:checked~.likert-box .likert-value,
+    .likert-option[data-val="4"] input:checked~.likert-box .likert-text {
+      color: var(--likert-4);
+    }
+
+    .likert-option[data-val="5"] input:checked~.likert-box {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--likert-5);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .likert-option[data-val="5"] input:checked~.likert-box .likert-value,
+    .likert-option[data-val="5"] input:checked~.likert-box .likert-text {
+      color: var(--likert-5);
+    }
+
+    /* Selected state general feedback */
+    .likert-option input:checked~.likert-box {
+      transform: scale(1.02);
+    }
+
+    /* Mobile response for Likert */
+    @media (max-width: 600px) {
+      .likert-scale {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .likert-box {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 16px;
+        padding: 12px 16px;
+        min-height: auto;
+      }
+
+      .likert-value {
+        margin-bottom: 0;
+        min-width: 24px;
+      }
+
+      .likert-text {
+        font-size: 0.85rem;
+        text-align: left;
+      }
+    }
+
+    /* Qualitative / Text Area questions */
+    .qualitative-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 14px 16px;
+      background: var(--muted-bg);
+      border: 1px solid var(--card-border);
+      color: var(--fg);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .qualitative-textarea:focus {
+      border-color: var(--primary);
+      background: var(--card);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    /* Export Panel */
+    .export-section {
+      background: var(--card);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-top: 40px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .export-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .export-title {
+      font-size: 1.4rem;
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .export-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .export-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .btn-secondary {
+      background: var(--muted-bg);
+      border-color: var(--card-border);
+      color: var(--fg);
+    }
+
+    .btn-secondary:hover {
+      background: var(--card-hover);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* Output View Modal/Box */
+    .output-box {
+      margin-top: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .output-tab-container {
+      display: flex;
+      border-bottom: 1px solid var(--card-border);
+      gap: 4px;
+    }
+
+    .output-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .output-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .code-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .code-output {
+      width: 100%;
+      height: 250px;
+      background: #09090b;
+      color: #34d399;
+      /* emerald code look */
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      resize: vertical;
+    }
+
+    [data-theme='light'] .code-output {
+      background: #0f172a;
+      color: #38bdf8;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Import Section */
+    .import-section {
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--muted-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .import-textarea {
+      width: 100%;
+      height: 100px;
+      padding: 8px 12px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--fg);
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #10b981;
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      z-index: 100;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transform: translateY(150%);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+    }
+
+    .toast-error {
+      background: #ef4444;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Dialog/Confirm Backdrop */
+    .dialog-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dialog {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: zoomIn 0.2s ease;
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .dialog-title {
+      font-size: 1.25rem;
+      color: var(--fg);
+    }
+
+    .dialog-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Info Banner */
+    .info-banner {
+      background: rgba(79, 70, 229, 0.08);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--fg);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .info-banner svg {
+      flex-shrink: 0;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    .info-text {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <header>
+      <div class="header-top">
+        <div class="logo-container">
+          <div class="logo-icon">S</div>
+          <div>
+            <h4 class="project-title">Sovereignty Trade-Off Navigator</h4>
+          </div>
+        </div>
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">
+          <!-- SVG Moon icon -->
+          <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+          <span id="themeText">Dunkelmodus</span>
+        </button>
+      </div>
+
+      <div class="title-area">
+        <h1 class="main-title">Experten-Evaluation</h1>
+        <p class="main-desc">
+          Vielen Dank, dass Sie an der Evaluation des Sovereignty Trade-Off Navigators teilnehmen.
+          Dieses Formular dient zur strukturierten Erhebung Ihrer Rückmeldungen im Vergleich zur bisherigen,
+          unstrukturierten Arbeitsweise.
+        </p>
+      </div>
+    </header>
+
+    <!-- Sticky Navigation & Progress Area -->
+    <div class="controls-nav">
+      <div class="nav-row">
+        <div class="select-wrapper">
+          <select id="phaseSelect" class="phase-select" onchange="handlePhaseChange()">
+            <option value="phase1">Phase 1: Vorbereitungsphase (Fragebogen A)</option>
+            <option value="phase2">Phase 2: Abstimmungsphase (Fragebogen B)</option>
+          </select>
+        </div>
+        <div class="progress-container">
+          <span>Fortschritt:</span>
+          <div class="progress-bar-bg">
+            <div id="progressBar" class="progress-bar-fill"></div>
+          </div>
+          <span id="progressText">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Form Container -->
+    <form id="evaluationForm" onsubmit="event.preventDefault();">
+      <div id="questionsContainer">
+        <!-- Questions will be dynamically loaded here by JS -->
+      </div>
+    </form>
+
+    <!-- Export Section -->
+    <div class="export-section">
+      <div class="export-header">
+        <h3 class="export-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" x2="12" y1="15" y2="3"></line>
+          </svg>
+          Daten exportieren & speichern
+        </h3>
+        <p class="export-desc">Exportieren Sie Ihre Antworten als JSON-Datei zur lokalen Sicherung oder laden Sie eine bestehende JSON-Sicherung hoch.</p>
+      </div>
+
+      <div class="export-actions">
+        <button class="btn btn-primary" onclick="exportJSON()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" x2="12" y1="15" y2="3"></line>
+          </svg>
+          JSON herunterladen
+        </button>
+        <button class="btn btn-secondary" onclick="toggleImportArea()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          JSON importieren
+        </button>
+        <button class="btn btn-danger" onclick="confirmReset()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+          </svg>
+          Antworten zurücksetzen
+        </button>
+      </div>
+
+      <!-- Import Code Box -->
+      <div id="importArea" class="import-section">
+        <label style="font-weight: 600; font-size: 0.9rem; color: var(--fg); margin-bottom: 4px;">JSON-Datei auswählen:</label>
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
+          <input type="file" id="importJsonFile" accept=".json" style="display: none;" onchange="handleJsonFileImport(event)">
+          <button class="btn btn-secondary" onclick="document.getElementById('importJsonFile').click()">
+            Datei auswählen (.json)
+          </button>
+          <span style="font-size: 0.85rem; color: var(--muted);">oder JSON-Text unten einfügen:</span>
+        </div>
+        <textarea id="importJsonInput" class="import-textarea"
+          placeholder='{"phase": "phase1", "responses": { ... }}'></textarea>
+        <button class="btn btn-primary" style="align-self: flex-start; padding: 8px 16px;" onclick="importData()">
+          Importieren & Laden
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastMessage">Erfolgreich kopiert!</span>
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <div id="confirmDialogBackdrop" class="dialog-backdrop" onclick="closeConfirmDialog(false)">
+    <div class="dialog" onclick="event.stopPropagation()">
+      <h3 class="dialog-title" id="dialogTitle">Aktion bestätigen</h3>
+      <p class="dialog-desc" id="dialogDesc">Möchten Sie diese Aktion wirklich ausführen? Dies kann nicht rückgängig
+        gemacht werden.</p>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" onclick="closeConfirmDialog(false)">Abbrechen</button>
+        <button class="btn btn-primary" id="dialogConfirmBtn" onclick="closeConfirmDialog(true)">Ja, fortfahren</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data definition for Likert scale options
+    const LIKERT_OPTIONS = [
+      { val: 1, text: "Wesentlich schlechter", label: "Wesentlich schlechter" },
+      { val: 2, text: "Schlechter", label: "Schlechter" },
+      { val: 3, text: "Gleichwertig", label: "Gleichwertig" },
+      { val: 4, text: "Besser", label: "Besser" },
+      { val: 5, text: "Wesentlich besser", label: "Wesentlich besser" }
+    ];
+
+    // Case Study Questionnaires
+    const PHASE_DATA = {
+      phase1: {
+        title: "Fragebogen A: Systematisierte Bewertung der Vorbereitungsphase durch den Architekten",
+        likertLabel: "Reduktion kognitiver Last und Kontext-Übersetzung",
+        likertQuestions: [
+          {
+            id: "p1_q1",
+            title: "Geführte Kontextualisierung & Strukturierung",
+            text: "Die strukturierte Ableitung eigener Systembeispiele sowie die adressatengerechte Übersetzung abstrakter Architektur-Themen in unseren spezifischen Kontext bewerte ich durch das Werkzeug im Vergleich zur bisherigen Vorgehensweise als:"
+          },
+          {
+            id: "p1_q2",
+            title: "Kognitive Entlastung & Vorbereitungssicherheit",
+            text: "Meine persönliche kognitive Entlastung bei der Einarbeitung in komplexe Architektur-Szenarien sowie die daraus resultierende Sicherheit für das anstehende Stakeholder-Alignment bewerte ich im Vergleich zum Status Quo als:"
+          }
+        ],
+        qualitativeQuestions: [
+          {
+            id: "p1_qual1",
+            title: "Leitfrage 1: Übertragbarkeit generischer Szenarien",
+            text: "Wie gut ließen sich die im System hinterlegten generischen Szenarien auf die spezifische Plattform übertragen und durch eigenen Kontext anreichern?"
+          },
+          {
+            id: "p1_qual2",
+            title: "Leitfrage 2: Gewünschte Strukturierungshilfen",
+            text: "Welche zusätzlichen Strukturierungshilfen wären wünschenswert gewesen, um den Systemkontext im Tool noch präziser zu erfassen?"
+          }
+        ]
+      },
+      phase2: {
+        title: "Fragebogen B: Systematisierte Bewertung der Abstimmungsphase durch die Fachexperten",
+        likertLabel: "Transparenz, Konfliktauflösung und Objektivierung",
+        likertQuestions: [
+          {
+            id: "p2_q1",
+            title: "Entscheidungsgrundlage",
+            text: "Die Schaffung einer verständlichen und fundierten Entscheidungsgrundlage für alle Beteiligten (auch ohne tiefes technisches Vorwissen) gelingt durch den Einsatz des Tools im Vergleich zu bisherigen Abstimmungen:"
+          },
+          {
+            id: "p2_q2",
+            title: "Inhaltliche Fundierung (Szenarien)",
+            text: "Die Praxisnähe und fachliche Sinnhaftigkeit der geführten Architektur-Diskussion bewerte ich durch die im Tool bereitgestellten Entscheidungsbäume, Szenarien und deren Optionen im Vergleich zu unseren bisherigen Methoden als:"
+          },
+          {
+            id: "p2_q3",
+            title: "Inhaltliche Vollständigkeit (Entscheidungsbäume)",
+            text: "Die systematische Abdeckung aller relevanten Entscheidungsdimensionen und Problemstellungen bewerte ich durch die hinterlegten Entscheidungsbäume im Vergleich zu früheren Diskussionen als:"
+          },
+          {
+            id: "p2_q4",
+            title: "Sichtbarkeit von Zielkonflikten (Trade-Offs)",
+            text: "Das frühzeitige und transparente Aufdecken von architektonischen Zielkonflikten bewerte ich durch die Nutzung des Systems im Vergleich zu unseren bisherigen Methoden als:"
+          },
+          {
+            id: "p2_q5",
+            title: "Objektivierung der Diskussion",
+            text: "Die Versachlichung der Lösungsfindung und die Vermeidung von reinen „Bauchgefühl“-Entscheidungen gelingt mit Unterstützung des Tools im Vergleich zum Status Quo:"
+          },
+          {
+            id: "p2_q6",
+            title: "Lösungsfindung bei Konflikten",
+            text: "Die methodische Führung bei der Erarbeitung von tragfähigen Kompromissen für festgestellte Zielkonflikte funktioniert durch das Tool im Vergleich zu unseren bisherigen Diskussionsrunden:"
+          },
+          {
+            id: "p2_q7",
+            title: "Gemeinsames Alignment",
+            text: "Das Herstellen eines gemeinsamen Verständnisses zwischen technischer Systemrealität und geschäftlichen Anforderungen gelingt durch den prozessgestützten Ansatz im Vergleich zu bisherigen Meetings:"
+          },
+          {
+            id: "p2_q8",
+            title: "Entscheidungssicherheit",
+            text: "Mein Vertrauen in die Qualität der finalen Entscheidung (d.h. dass alle relevanten Trade-Offs bedacht und ausbalanciert wurden) bewerte ich nach der Nutzung des Tools im Vergleich zu früher als:"
+          }
+        ],
+        qualitativeQuestions: [
+          {
+            id: "p2_qual1",
+            title: "Leitfrage 1: Einfluss der Trade-Off-Matrix",
+            text: "Inwiefern hat die gemeinsame Arbeit mit der Trade-Off-Matrix und den Detail-Panels die Diskussionsdynamik über Zielkonflikte im Vergleich zu früheren Gesprächen beeinflusst?"
+          },
+          {
+            id: "p2_qual2",
+            title: "Leitfrage 2: Einfluss vorgegebener Entscheidungsbäume & Best Practices",
+            text: "Wie stark haben die vorgegebenen Entscheidungsbäume und die bereitgestellten Lösungsvorschläge (Best-Practices) den Gesprächsverlauf objektiviert oder gelenkt?"
+          },
+          {
+            id: "p2_qual3",
+            title: "Leitfrage 3: Grenzen & methodische Hürden",
+            text: "Welche Grenzen oder methodischen Hürden zeigten sich bei der Konfliktauflösung unter Verwendung des Werkzeugs?"
+          },
+          {
+            id: "p2_qual4",
+            title: "Leitfrage 4: Vollständigkeit & Praxisnähe der Szenarien",
+            text: "Wie vollständig und praxisnah waren die im System hinterlegten Szenarien und Entscheidungsbäume für die konkrete Plattform? Haben relevante Dimensionen gefehlt, die in der Diskussion hätten berücksichtigt werden müssen?"
+          }
+        ]
+      }
+    };
+
+    // State object to persist all responses
+    let state = {
+      theme: 'dark',
+      currentPhase: 'phase1',
+      responses: {} // Keys will be question IDs, values will be { val: Number, comment: String } or String for qualitative
+    };
+
+    // Initialize Page
+    document.addEventListener("DOMContentLoaded", () => {
+      loadStateFromLocalStorage();
+      setTheme(state.theme);
+
+      // Setup dropdown select value
+      const phaseSelect = document.getElementById("phaseSelect");
+      phaseSelect.value = state.currentPhase;
+
+      renderActivePhase();
+      updateProgressBar();
+    });
+
+    // Theme Management
+    function toggleTheme() {
+      const newTheme = state.theme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      saveStateToLocalStorage();
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+
+      const themeIcon = document.getElementById("themeIcon");
+      const themeText = document.getElementById("themeText");
+
+      if (theme === 'dark') {
+        themeText.textContent = "Hellmodus";
+        // Show sun icon
+        themeIcon.innerHTML = `
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        `;
+      } else {
+        themeText.textContent = "Dunkelmodus";
+        // Show moon icon
+        themeIcon.innerHTML = `
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        `;
+      }
+    }
+
+    // Load / Save LocalStorage
+    function loadStateFromLocalStorage() {
+      const saved = localStorage.getItem("sovereignty_nav_eval_state");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+        } catch (e) {
+          console.error("Error loading saved state", e);
+        }
+      }
+    }
+
+    function saveStateToLocalStorage() {
+      localStorage.setItem("sovereignty_nav_eval_state", JSON.stringify(state));
+    }
+
+    // Switch between Phase 1 and Phase 2 questionnaires
+    function handlePhaseChange() {
+      const phaseSelect = document.getElementById("phaseSelect");
+      state.currentPhase = phaseSelect.value;
+      saveStateToLocalStorage();
+
+      renderActivePhase();
+      updateProgressBar();
+    }
+
+    // Render active questions list
+    function renderActivePhase() {
+      const container = document.getElementById("questionsContainer");
+      container.innerHTML = "";
+
+      const activePhase = PHASE_DATA[state.currentPhase];
+
+      // Header subtitle
+      const subtitle = document.createElement("h2");
+      subtitle.className = "section-title";
+      subtitle.textContent = activePhase.likertLabel;
+      container.appendChild(subtitle);
+
+      // Render Likert questions
+      activePhase.likertQuestions.forEach((q, idx) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = `card_${q.id}`;
+
+        const cardHeader = document.createElement("div");
+        cardHeader.className = "card-header";
+
+        const label = document.createElement("span");
+        label.className = "question-label";
+        label.textContent = `${q.title}`;
+
+        const questionText = document.createElement("p");
+        questionText.className = "question-title";
+        questionText.textContent = q.text;
+
+        cardHeader.appendChild(label);
+        cardHeader.appendChild(questionText);
+        card.appendChild(cardHeader);
+
+        // Likert scale inputs container
+        const likertContainer = document.createElement("div");
+        likertContainer.className = "likert-container";
+
+        const scaleDiv = document.createElement("div");
+        scaleDiv.className = "likert-scale";
+
+        // Render 5 options
+        LIKERT_OPTIONS.forEach(opt => {
+          const optWrapper = document.createElement("label");
+          optWrapper.className = "likert-option";
+          optWrapper.setAttribute("data-val", opt.val);
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = q.id;
+          radio.value = opt.val;
+
+          // Pre-fill if exists in state
+          if (state.responses[q.id] && state.responses[q.id].val === opt.val) {
+            radio.checked = true;
+          }
+
+          radio.addEventListener("change", () => {
+            handleLikertSelect(q.id, opt.val);
+          });
+
+          const box = document.createElement("div");
+          box.className = "likert-box";
+
+          const valSpan = document.createElement("span");
+          valSpan.className = "likert-value";
+          valSpan.textContent = opt.val;
+
+          const textSpan = document.createElement("span");
+          textSpan.className = "likert-text";
+          textSpan.textContent = opt.text;
+
+          box.appendChild(valSpan);
+          box.appendChild(textSpan);
+
+          optWrapper.appendChild(radio);
+          optWrapper.appendChild(box);
+          scaleDiv.appendChild(optWrapper);
+        });
+
+        likertContainer.appendChild(scaleDiv);
+        card.appendChild(likertContainer);
+
+        // Add a small contextual comment block for each Likert question if desired (extra feedback)
+        const noteArea = document.createElement("div");
+        noteArea.style.display = "flex";
+        noteArea.style.flexDirection = "column";
+        noteArea.style.gap = "6px";
+
+        const noteLabel = document.createElement("label");
+        noteLabel.style.fontSize = "0.85rem";
+        noteLabel.style.fontWeight = "600";
+        noteLabel.style.color = "var(--muted)";
+        noteLabel.textContent = "Optionale Bemerkungen zu dieser Dimension:";
+
+        const noteText = document.createElement("textarea");
+        noteText.className = "qualitative-textarea";
+        noteText.placeholder = "Geben Sie hier eventuelle Begründungen oder Beispiele aus Ihrer Praxis ein...";
+        noteText.style.minHeight = "60px";
+        noteText.style.fontSize = "0.9rem";
+
+        if (state.responses[q.id] && state.responses[q.id].comment) {
+          noteText.value = state.responses[q.id].comment;
+        }
+
+        noteText.addEventListener("input", (e) => {
+          handleLikertComment(q.id, e.target.value);
+        });
+
+        noteArea.appendChild(noteLabel);
+        noteArea.appendChild(noteText);
+        card.appendChild(noteArea);
+
+        container.appendChild(card);
+      });
+
+      // Header for qualitative questions
+      const qualTitle = document.createElement("h2");
+      qualTitle.className = "section-title";
+      qualTitle.textContent = "Qualitative Leitfragen";
+      container.appendChild(qualTitle);
+
+      // Render qualitative questions
+      activePhase.qualitativeQuestions.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.id = `card_${q.id}`;
+
+        const cardHeader = document.createElement("div");
+        cardHeader.className = "card-header";
+
+        const label = document.createElement("span");
+        label.className = "question-label";
+        label.textContent = q.title;
+
+        const questionText = document.createElement("p");
+        questionText.className = "question-title";
+        questionText.textContent = q.text;
+
+        cardHeader.appendChild(label);
+        cardHeader.appendChild(questionText);
+        card.appendChild(cardHeader);
+
+        const textarea = document.createElement("textarea");
+        textarea.className = "qualitative-textarea";
+        textarea.placeholder = "Formulieren Sie hier Ihre Beobachtungen, Kritikpunkte und Details...";
+
+        if (state.responses[q.id]) {
+          textarea.value = state.responses[q.id];
+        }
+
+        textarea.addEventListener("input", (e) => {
+          handleQualitativeInput(q.id, e.target.value);
+        });
+
+        card.appendChild(textarea);
+        container.appendChild(card);
+      });
+    }
+
+    // Form Event Handlers
+    function handleLikertSelect(questionId, value) {
+      if (!state.responses[questionId]) {
+        state.responses[questionId] = { val: null, comment: "" };
+      }
+      state.responses[questionId].val = parseInt(value);
+
+      // Remove unanswered visual indicator if set
+      const card = document.getElementById(`card_${questionId}`);
+      if (card) card.classList.remove("unanswered");
+
+      saveStateToLocalStorage();
+      updateProgressBar();
+    }
+
+    function handleLikertComment(questionId, commentText) {
+      if (!state.responses[questionId]) {
+        state.responses[questionId] = { val: null, comment: "" };
+      }
+      state.responses[questionId].comment = commentText;
+      saveStateToLocalStorage();
+    }
+
+    function handleQualitativeInput(questionId, text) {
+      state.responses[questionId] = text;
+      saveStateToLocalStorage();
+      updateProgressBar();
+    }
+
+    // Progress Bar Logic
+    function updateProgressBar() {
+      const activePhase = PHASE_DATA[state.currentPhase];
+      const totalQuestions = activePhase.likertQuestions.length + activePhase.qualitativeQuestions.length;
+      let completedQuestions = 0;
+
+      // Count Likert
+      activePhase.likertQuestions.forEach(q => {
+        if (state.responses[q.id] && state.responses[q.id].val !== undefined && state.responses[q.id].val !== null) {
+          completedQuestions++;
+        }
+      });
+
+      // Count qualitative (completed if text length > 5)
+      activePhase.qualitativeQuestions.forEach(q => {
+        if (state.responses[q.id] && state.responses[q.id].trim().length > 2) {
+          completedQuestions++;
+        }
+      });
+
+      const percentage = Math.round((completedQuestions / totalQuestions) * 100);
+
+      const progressBar = document.getElementById("progressBar");
+      const progressText = document.getElementById("progressText");
+
+      progressBar.style.width = `${percentage}%`;
+      progressText.textContent = `${percentage}% (${completedQuestions}/${totalQuestions})`;
+    }
+
+    // Show Toast Notification
+    function showToast(message, isError = false) {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMessage");
+
+      toastMsg.textContent = message;
+      if (isError) {
+        toast.classList.add("toast-error");
+      } else {
+        toast.classList.remove("toast-error");
+      }
+
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    // Reset Questionnaire
+    let pendingConfirmAction = null;
+    function confirmReset() {
+      showConfirmDialog(
+        "Antworten zurücksetzen",
+        "Möchten Sie wirklich alle Antworten für die aktuelle Phase zurücksetzen? Dadurch gehen alle eingegebenen Daten in diesem Browser verloren.",
+        () => {
+          const activePhase = PHASE_DATA[state.currentPhase];
+          activePhase.likertQuestions.forEach(q => {
+            delete state.responses[q.id];
+          });
+          activePhase.qualitativeQuestions.forEach(q => {
+            delete state.responses[q.id];
+          });
+          saveStateToLocalStorage();
+          renderActivePhase();
+          updateProgressBar();
+          showToast("Antworten zurückgesetzt!");
+        }
+      );
+    }
+
+    // Confirm Dialog Logic
+    function showConfirmDialog(title, description, onConfirm) {
+      document.getElementById("dialogTitle").textContent = title;
+      document.getElementById("dialogDesc").textContent = description;
+      document.getElementById("confirmDialogBackdrop").style.display = "flex";
+      pendingConfirmAction = onConfirm;
+    }
+
+    function closeConfirmDialog(isConfirmed) {
+      document.getElementById("confirmDialogBackdrop").style.display = "none";
+      if (isConfirmed && pendingConfirmAction) {
+        pendingConfirmAction();
+      }
+      pendingConfirmAction = null;
+    }
+
+    // Import functionality
+    function toggleImportArea() {
+      const importArea = document.getElementById("importArea");
+      if (importArea.style.display === "flex") {
+        importArea.style.display = "none";
+      } else {
+        importArea.style.display = "flex";
+      }
+    }
+
+    function handleJsonFileImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (file.type !== "application/json" && !file.name.endsWith(".json")) {
+        showToast("Bitte wählen Sie eine gültige JSON-Datei aus!", true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const content = e.target.result;
+        processJsonImport(content);
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function importData() {
+      const jsonInput = document.getElementById("importJsonInput").value;
+      processJsonImport(jsonInput);
+    }
+
+    function processJsonImport(jsonInput) {
+      if (!jsonInput.trim()) {
+        showToast("Keine Daten zum Importieren gefunden!", true);
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(jsonInput);
+        if (parsed.responses) {
+          state.responses = { ...state.responses, ...parsed.responses };
+          if (parsed.currentPhase) {
+            state.currentPhase = parsed.currentPhase;
+            document.getElementById("phaseSelect").value = state.currentPhase;
+          }
+          saveStateToLocalStorage();
+          renderActivePhase();
+          updateProgressBar();
+          showToast("Daten erfolgreich importiert!");
+          document.getElementById("importArea").style.display = "none";
+          document.getElementById("importJsonInput").value = "";
+        } else {
+          showToast("Ungültiges Datenformat. 'responses' fehlt.", true);
+        }
+      } catch (e) {
+        showToast("JSON Parser-Fehler: " + e.message, true);
+      }
+    }
+
+    // Export formats generators
+    function generateJSONString() {
+      const exportObject = {
+        title: PHASE_DATA[state.currentPhase].title,
+        phase: state.currentPhase,
+        exportedAt: new Date().toISOString(),
+        responses: {}
+      };
+
+      // Filter responses to only active phase
+      const activePhase = PHASE_DATA[state.currentPhase];
+      activePhase.likertQuestions.forEach(q => {
+        exportObject.responses[q.id] = state.responses[q.id] || { val: null, comment: "" };
+      });
+      activePhase.qualitativeQuestions.forEach(q => {
+        exportObject.responses[q.id] = state.responses[q.id] || "";
+      });
+
+      return JSON.stringify(exportObject, null, 2);
+    }
+
+    // Trigger File Download
+    function exportJSON() {
+      // Perform validation check
+      const activePhase = PHASE_DATA[state.currentPhase];
+      let hasUnanswered = false;
+
+      activePhase.likertQuestions.forEach(q => {
+        if (!state.responses[q.id] || state.responses[q.id].val === null) {
+          hasUnanswered = true;
+          document.getElementById(`card_${q.id}`).classList.add("unanswered");
+        }
+      });
+
+      if (hasUnanswered) {
+        showToast("Es sind noch unbeantwortete Likert-Fragen vorhanden!", true);
+
+        // Scroll to first unanswered card
+        const firstUnanswered = document.querySelector(".card.unanswered");
+        if (firstUnanswered) {
+          firstUnanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+
+      const content = generateJSONString();
+      const filename = `evaluation_${state.currentPhase}_export.json`;
+      const mime = "application/json";
+
+      const blob = new Blob([content], { type: mime });
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast("Datei erfolgreich heruntergeladen!");
+      }
+    }
+  </script>
+
+</body>
+
+</html>

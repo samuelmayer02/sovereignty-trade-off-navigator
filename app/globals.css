@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  --card-border: 240 3.7% 15.9%;
+  --success: 142.1 70.6% 45.3%;
+  --warning: 37.9 90.2% 50.8%;
+  --danger: 0 84.2% 60.2%;
+  
+  --glass-bg: rgba(17, 17, 17, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-card-grad: linear-gradient(145deg, rgba(34,34,34,0.4) 0%, rgba(17,17,17,0.8) 100%);
+}
+
+[data-theme='light'] {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5% 64.9%;
+  --card-border: 240 5.9% 90%;
+  
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-card-grad: linear-gradient(145deg, rgba(241,245,249,0.4) 0%, rgba(226,232,240,0.8) 100%);
+}
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-border: hsl(var(--card-border));
+  --color-muted: hsl(var(--muted-foreground));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-danger: hsl(var(--danger));
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+@utility glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@utility glass-card {
+  background: var(--glass-card-grad);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -6px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme='light'] .glass-card {
+  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+@utility glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+@utility glass-stepper {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.15),
+    inset 0 0 12px rgba(255, 255, 255, 0.02);
+}
+
+[data-theme='light'] .glass-stepper {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.75) 0%, rgba(240, 244, 248, 0.55) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 20px 40px -15px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+/* 3D "Lift" Effect Utility */
+@utility lift-effect {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+.lift-effect:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+}
+[data-theme='light'] .lift-effect:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+/* 3D Depth for inputs and sliders */
+input[type="range"] {
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+[data-theme='light'] input[type="range"] {
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Styled scrollbar for overflow areas */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--primary) / 0.3);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--primary) / 0.6);
+}
+
+/* Completely hidden scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}

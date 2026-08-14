@@ -1,0 +1,979 @@
+[
+  {
+    "scenario_id": "SCN-AUDIT-01",
+    "category": "Digitale Souveränität",
+    "topic": "Zertifizierungen & Supply Chain Governance",
+    "stimulus": "Im Zuge verschärfter regulatorischer Vorgaben (z.B. KRITIS, NIS2) muss die Strategie zur Überprüfbarkeit der IT-Supply-Chain und der Rechenzentren für die Zielplattform definiert werden. Es gilt architektonisch festzulegen, auf welche Weise Nachweise über die Sicherheit erbracht werden und wie weitreichend die eigenen Audit-Rechte in die Infrastruktur hineinreichen sollen.",
+    "metric_question": "Wie tiefgreifend muss die Kontrolle über Audits und die IT-Supply-Chain sein?",
+    "rationale": "Dieses Szenario beleuchtet den Zielkonflikt zwischen der Nutzung standardisierter Provider-Zertifikate und der Einhaltung strenger souveräner Kontroll- und Auditvorgaben. Standardisierte Berichte vereinfachen den Betrieb, schränken aber die eigene Transparenz und Auditfähigkeit ein.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Standard Provider-Zertifikate",
+        "description": "Akzeptanz der regulären Prüfberichte des Cloud-Anbieters (z.B. ISO 27001, SOC 2). Keine eigenen Audits oder Einschränkungen der Subunternehmerkette.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "6de76991-fef4-445c-ac51-243070ddbdc5",
+          "e2751932-2975-4904-8547-7a8c7f512c2b"
+        ]
+      },
+      {
+        "label": "Erweiterte Compliance & Lieferkettentransparenz",
+        "description": "Einforderung spezifischer regionaler Nachweise (z.B. BSI C5, SecNumCloud) sowie vertraglicher Transparenz über Subunternehmer.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-audit-sovereign-cert",
+          "eaccb027-0258-47bb-baf5-8c1d1fc5efa1"
+        ]
+      },
+      {
+        "label": "Eigenes physisches Prüfrecht (Vor-Ort-Audit)",
+        "description": "Recht zur eigenen physischen Kontrolle von Servern und Rechenzentren (erfordert zwingend eigene Hardware / Private Cloud).",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-audit-physical"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-AVAIL-01",
+    "category": "Resilienz & Verfügbarkeit",
+    "topic": "Infrastrukturelle Redundanz",
+    "stimulus": "Um Systemausfälle durch isolierte Hardware-Defekte oder weitreichende Standort-Ausfälle abzufangen, muss das Level der physischen Infrastruktur-Redundanz festgelegt werden.",
+    "metric_question": "Auf welcher architektonischen Ebene wird die Redundanz der Systemkomponenten primär aufgebaut?",
+    "rationale": "Das Redundanzlevel bestimmt direkt die Ausfallsicherheit und Architekturkomplexität. Provider-Redundanz streut das Risiko maximal, treibt aber den operativen Aufwand in die Höhe. Lokale Ansätze sind operativ einfach, bergen aber das Risiko eines Totalausfalls beim Verlust des Rechenzentrums.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Provider-Redundanz",
+        "description": "Spiegelung der Systeme über vollkommen getrennte Cloud-Provider oder Ökosysteme hinweg.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-multi-provider"
+        ]
+      },
+      {
+        "label": "Standort-Redundanz",
+        "description": "Verteilung über physisch getrennte Rechenzentren oder Regionen (Georedundanz), um lokale Katastrophen abzufangen.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-multi-region"
+        ]
+      },
+      {
+        "label": "Lokale Redundanz",
+        "description": "Bereitstellung zusätzlicher Maschinen oder VMs innerhalb desselben Rechenzentrums (Schutz vor reinem Hardware-Ausfall).",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "258db941-7b3b-4bef-b734-62544bbb5516"
+        ]
+      },
+      {
+        "label": "Keine Redundanz (Single Node)",
+        "description": "Betrieb ohne redundante Fallback-Systeme. Ein Hardware-Ausfall führt unmittelbar zur Downtime.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-single-site"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-BAK-01",
+    "category": "Resilienz & Verfügbarkeit",
+    "topic": "Schutz und Souveränität der Backups",
+    "stimulus": "Um kritischen Datenverlust oder nachträgliche Manipulationen auszuschließen, muss die Integrität und Unveränderbarkeit der System-Backups architektonisch sichergestellt werden.",
+    "metric_question": "Wie wird die Integrität der Backups vor unbefugtem Zugriff geschützt?",
+    "rationale": "Backup-Strategien stehen im Spannungsfeld zwischen operativem Komfort und Datenhoheit. Cloud-native Backups bieten maximale Automatisierung, überlassen dem Provider aber die kryptografische Kontrolle. Souveräne Air-Gap-Ansätze schützen vor Manipulation und Fremdzugriff, erfordern jedoch signifikant höheren Betriebsaufwand und eigene Infrastruktur.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Provider-Managed Cloud Backups",
+        "description": "Standardmäßige Datensicherung im Cloud-Speicher des Anbieters. Der Provider übernimmt die Verwaltung und Schlüsselkontrolle automatisch.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "4224a60c-5a9e-46c5-a483-628926ca9c1c"
+        ]
+      },
+      {
+        "label": "Unveränderliche Backups mit eigener Schlüsselkontrolle",
+        "description": "Speicherung in der Cloud mit Schutz vor nachträglicher Löschung (Immutability) und eigener Schlüsselverwaltung (BYOK) für erhöhte Datenhoheit.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "4b81aaf2-fe03-41a4-b80d-794487f0e0e4",
+          "req-backup-byok"
+        ]
+      },
+      {
+        "label": "Isolierte & Provider-unabhängige Backups",
+        "description": "Backups werden physisch getrennt (Air-Gap), bei einem Zweitanbieter (Multi-Cloud) oder an einem geschützten Standort gelagert für maximale Autarkie.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "3787d61d-7c3e-40cd-affd-86a71b3cf082",
+          "req-backup-residency",
+          "req-backup-multicloud"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-CAP-01",
+    "category": "Datenkonsistenz & Integrität",
+    "topic": "Verhalten bei Netzwerk-Partitionierung",
+    "stimulus": "Eine physische Netzwerkstörung trennt die verteilten Datenbankknoten voneinander (Network Partition).",
+    "metric_question": "Wie verhält sich das System bei Lesezugriffen im Konfliktfall?",
+    "rationale": "Dieses Szenario adressiert das CAP-Theorem und den Konflikt zwischen Datenkonsistenz und Verfügbarkeit bei Netzwerk-Partitionierungen. Die Wahl zwischen Eventual Consistency und strikter Konsistenz bestimmt maßgeblich die Anbieter-Abhängigkeit.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Strikte Konsistenz",
+        "description": "Das System priorisiert Konsistenz über Verfügbarkeit. Bei einer Netzwerkstörung blockieren die betroffenen Knoten oder werfen Timeouts, um zu verhindern, dass abweichende Datenzustände entstehen.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "a3dc38fe-72ea-4760-920c-93e469ae2b30"
+        ]
+      },
+      {
+        "label": "Kausale Konsistenz",
+        "description": "Das System bleibt hochverfügbar, garantiert aber eine logische Kausalität, sodass Ursache und Wirkung beim Lesen und Schreiben nicht vertauscht werden.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "ed16a8af-16ce-4b39-8c7f-68bd0ac4b3c9"
+        ]
+      },
+      {
+        "label": "Eventual Consistency",
+        "description": "Maximale Verfügbarkeit. Das System beantwortet Anfragen ungehindert weiter, selbst wenn die Knoten komplett voneinander isoliert sind. Temporäre Inkonsistenzen werden toleriert.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "baba43e5-69ce-46ad-b6b1-49d9325c77b0"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-CAP-02",
+    "category": "Datenkonsistenz & Integrität",
+    "topic": "Session-Garantien für Lesevorgänge",
+    "stimulus": "Ein Akteur aktualisiert geschäftskritische Daten und ruft sie unmittelbar danach ab. Gleichzeitig rufen andere Systemkomponenten oder Nutzer große Datenmengen parallel ab, wobei Anfragen durch Lastverteilung bei unterschiedlichen Knoten landen.",
+    "metric_question": "Welche Konsistenzgarantien gelten architekturseitig für Lesevorgänge innerhalb einzelner Sessions?",
+    "rationale": "Session-Garantien für Lesevorgänge bestimmen die Nutzererfahrung in verteilten Systemen. Volle Garantien (sofortige Sichtbarkeit eigener Änderungen, kein zeitlicher Rückschritt) erfordern Session-Affinity oder synchrone Replikation, was oft an proprietäre Provider-Lösungen bindet. Der Verzicht auf Garantien stärkt die Skalierbarkeit und Provider-Unabhängigkeit, riskiert aber irritierende Nutzererlebnisse.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Strikte Session-Konsistenz",
+        "description": "Nutzer sehen sofort ihre eigenen Änderungen (Read-Your-Writes) und erleben keine zeitlichen Rückschritte im Datenverlauf (Monotonic Reads). Architekturseitig optimal gelöst durch zustandslose Versions-Tokens, die beim Routing an Replicas mitgegeben werden.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-read-primary"
+        ]
+      },
+      {
+        "label": "Partielle Session-Garantien",
+        "description": "Eigene Schreibvorgänge werden unmittelbar sichtbar, bei Abfragen anderer Datenbereiche können jedoch kurzzeitig veraltete Zustände auftreten.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-read-session"
+        ]
+      },
+      {
+        "label": "Keine Session-Garantien",
+        "description": "Jeder Lesevorgang kann von jedem beliebigen Replica bedient werden. Das System nimmt zugunsten maximaler Performance in Kauf, dass Nutzer zeitweise veraltete Daten sehen.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-read-async"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-CAP-03",
+    "category": "Datenkonsistenz & Integrität",
+    "topic": "Schreib-Konsistenz und Parallelisierung",
+    "stimulus": "Eine Systemkomponente generiert unter hoher Last kontinuierlich neue Daten, während ein parallel laufender Prozess Entscheidungen auf Basis dieser hochfrequentierten Datenströme trifft.",
+    "metric_question": "Welche Garantien gelten für die Reihenfolge und kausale Abhängigkeit von Schreibvorgängen?",
+    "rationale": "Strikte Schreibreihenfolgen und kausale Abhängigkeiten erfordern häufig zentralisierte Koordinationsdienste, die an proprietäre Cloud-Infrastruktur binden. Maximale Parallelisierung erhält die Provider-Unabhängigkeit, verlagert die Komplexität aber auf die Applikationsschicht (z.B. asynchrone Konfliktauflösung, Kompensationstransaktionen).",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Zentrale Serialisierung",
+        "description": "Alle Schreiboperationen werden über einen zentralen Master-Knoten (Leader) geleitet, was eine exakte Reihenfolge garantiert. Dies limitiert jedoch die horizontale Skalierbarkeit.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "1bb63b64-7082-43b7-8552-9bab772d4de3"
+        ]
+      },
+      {
+        "label": "Verteilte Serialisierung",
+        "description": "Logisch zusammenhängende Daten (z. B. auf demselben Shard) werden strikt serialisiert, oder es kommen verteilte Transaktionsprotokolle (Distributed SQL) zum Einsatz. Voneinander unabhängige Datensätze können jedoch global parallel verarbeitet werden.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-db-sharding"
+        ]
+      },
+      {
+        "label": "Best-Effort",
+        "description": "Schreibvorgänge auf denselben Datenbestand werden an verteilten Knoten parallel zugelassen. Temporäre Schreibkonflikte werden toleriert und asynchron im Nachhinein aufgelöst.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "da898631-91c9-42de-a993-394db344fcb0"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-CICD-01",
+    "category": "Architektur & Infrastruktur",
+    "topic": "CI/CD & Quellcode-Hosting",
+    "stimulus": "Für die kontinuierliche Software-Entwicklung, automatisierte Tests und Deploys der Applikationen muss die Strategie zum Betrieb der CI/CD-Pipelines und Code-Repositories festgelegt werden. Es gilt festzulegen, auf welcher Infrastruktur der Quellcode, die Build-Prozesse und die Bereitstellungsschlüssel betrieben werden.",
+    "metric_question": "Wo und auf welcher Infrastruktur sollen Quellcode-Repositories, Build-Runner und Deployment-Pipelines betrieben werden?",
+    "rationale": "Dieses Szenario beschreibt den Zielkonflikt zwischen der vollen Integration in herstellerspezifische Cloud-Build-Dienste, der Flexibilität etablierter Multi-Cloud-SaaS-Plattformen und der vollständigen Autarkie über eigenverwaltete Build-Server (On-Premises).",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Cloud-native CI/CD-Dienste",
+        "description": "Nutzung der direkt in die Cloud-Plattform integrierten Pipeline-Dienste des Anbieters (z. B. AWS CodePipeline, GCP Cloud Build). Minimaler Betriebsaufwand, jedoch Bindung an das Provider-Ökosystem.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "6cfe60ee-fb85-4aca-ae08-02e62ef8042e"
+        ]
+      },
+      {
+        "label": "Verwaltete SaaS-Entwicklungsplattform",
+        "description": "Nutzung von zentralen SaaS-Plattformen für Code-Hosting und CI/CD (z. B. GitHub.com, GitLab.com). Hohe Flexibilität und Herstellerunabhängigkeit bezüglich der Ziel-Cloud, erfordert jedoch Vertrauen in das Code-Hosting externer SaaS-Anbieter.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "05ddc97c-b89c-424d-a5db-e39f0e461aa7"
+        ]
+      },
+      {
+        "label": "Eigenverwaltetes On-Premises CI/CD",
+        "description": "Betrieb der gesamten CI/CD-Infrastruktur und Repositories auf eigenen Servern oder in der Private Cloud (z. B. Self-Hosted GitLab, Jenkins). Maximale Kontrolle über Quellcode, Secrets und Build-Runner unabhängig von externen Anbietern.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "b32e4934-5b34-4e03-91f5-de1614683ff9"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-COMP-01",
+    "category": "Abstraktionsgrad & Portabilität",
+    "topic": "Infrastruktur-Servicemodell der Applikationen",
+    "stimulus": "Für den Betrieb der primären Workloads muss die Balance zwischen dem Management-Aufwand für das Operations-Team und der Plattform-Portabilität gewahrt werden.",
+    "metric_question": "Welches Servicemodell liegt den primären Workloads zugrunde?",
+    "rationale": "Der Abstraktionsgrad von Compute-Ressourcen definiert die Portabilität der Workloads. Serverless-Ansätze maximieren die Agilität und Ausfallsicherheit, opfern jedoch die digitale Souveränität zugunsten des Providers.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Serverless (FaaS/PaaS)",
+        "description": "Fokus auf reine Geschäftslogik; die Plattform skaliert unsichtbar und dynamisch, erzeugt aber starken Lock-in.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "0802520d-f3e2-4fe8-95f5-2c11267f7042"
+        ]
+      },
+      {
+        "label": "Managed Container-Orchestrierung (z.B. EKS/AKS)",
+        "description": "Anwendungen werden portabel gekapselt und auf gemanagten Cloud-Clustern ausgeführt. Hohe Agilität, jedoch Bindung der Control-Plane an den Provider.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "f2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e"
+        ]
+      },
+      {
+        "label": "Self-Managed Kubernetes (On-Premises / Sovereign Cloud)",
+        "description": "Eigenbetrieb eines Kubernetes-Clusters (z. B. K3s, RKE2) auf selbst kontrollierter Infrastruktur. Volle Kontrolle über etcd und Control Plane für maximale Souveränität, erfordert jedoch hohes SRE-Know-how.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-self-managed-kubernetes"
+        ]
+      },
+      {
+        "label": "Virtual Machines (IaaS)",
+        "description": "Klassischer Betrieb auf Ebene des Betriebssystems mit maximaler Kontrolle und hohem Verwaltungsaufwand.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "2884de34-9e0f-4770-be27-132e12670903"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-DEP-01",
+    "category": "Architektur & Infrastruktur",
+    "topic": "Deploymentmodell",
+    "stimulus": "Für die Plattform muss die grundlegende Hosting- und Infrastruktur-Strategie definiert werden.",
+    "metric_question": "Welches grundlegende Deployment-Modell wird für die Plattform verfolgt?",
+    "rationale": "Das Deployment-Modell legt das Fundament der Infrastrukturarchitektur fest. Während kommerzielle Public Clouds Skaleneffekte und maximale Feature-Integration bieten, sichern isolierte Sovereign Clouds, reine EU-Anbieter oder Private-Cloud-Ansätze die digitale Souveränität und Kontrolle auf unterschiedlichen Niveaus.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Commercial Public Cloud (US-Hyperscaler Standard)",
+        "description": "Nutzung kommerzieller Public-Cloud-Dienste von US-Anbietern (AWS, Azure, GCP) ohne spezielle europäische Souveränitäts- oder Isolationsgarantien.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "5a63eda4-c495-4f1f-bc42-91b9f2cf671f"
+        ]
+      },
+      {
+        "label": "US-Hyperscaler Sovereign Cloud (Treuhänder / Isolierte Region)",
+        "description": "Nutzung von Hyperscaler-Technologie in isolierten europäischen Regionen mit vertraglicher EU-Jurisdiktion und Treuhänderkontrollen (z. B. AWS Sovereign Cloud, Delos Cloud).",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-hyperscaler-sovereign-cloud"
+        ]
+      },
+      {
+        "label": "EU-Eigenständige Public Cloud (Reiner EU-Betreiber)",
+        "description": "Hosting bei einem europäischen Cloud-Anbieter ohne US-Konzernmutter (z. B. STACKIT, OVHcloud, IONOS), um den US CLOUD Act strukturell auszuschließen.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-jurisdiction-eu-entity"
+        ]
+      },
+      {
+        "label": "Multi-Cloud Deployment",
+        "description": "Verteiltes Hosting und Orchestrierung von Workloads über mehrere unabhängige Cloud-Provider hinweg zur Risikostreuung.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "b4a015de-8101-4290-ac89-11e339cba73d"
+        ]
+      },
+      {
+        "label": "Private Cloud / Air-Gapped On-Premises",
+        "description": "Betrieb auf dedizierter, physisch isolierter Hardware im eigenen Rechenzentrum (Air-Gapped) für maximale Kontrolle.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "871bebf7-adb0-4fae-a716-f3626ebe0276"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-DR-RTO-01",
+    "category": "Resilienz & Verfügbarkeit",
+    "topic": "Wiederherstellungszeit (RTO) & Automatisierungsgrad",
+    "stimulus": "Bei einem Totalausfall des primären Standorts muss die Ersatzinfrastruktur den Betrieb übernehmen. Die geschäftlich tolerierbare Wiederherstellungszeit (RTO) gibt dabei den architektonischen Rahmen vor.",
+    "metric_question": "Welche Zielvorgabe für die Wiederherstellungszeit (RTO) diktiert das Disaster-Recovery-Konzept?",
+    "rationale": "Die RTO ist der primäre Treiber für den Konflikt zwischen Souveränität und operativer Komplexität. Eine RTO nahe null erzwingt vollautomatisierte, proprietäre Failover-Mechanismen auf Netzwerkebene. Höhere RTO-Werte erlauben technologische Unabhängigkeit durch simplere, entkoppelte Wiederherstellungsverfahren.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "RTO ~ 0",
+        "description": "Sofortige, lückenlose Übernahme durch eine parallel laufende Infrastruktur. Erzwingt hochintegrierte, proprietäre Failover-Dienste und tiefen Vendor Lock-in.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "0840d1d4-1a38-42e3-a3e1-3a301636ff96",
+          "3d4f0a32-c84e-4577-b038-0b6b8e279f18"
+        ]
+      },
+      {
+        "label": "RTO in Minuten bis Stunden",
+        "description": "Die Ersatzinfrastruktur läuft skaliert im Hintergrund und muss bei Bedarf hochgefahren werden. Ein Kompromiss, der providerunabhängige Skript-Automatisierung (z.B. via Terraform) zulässt.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "3a86849f-05dc-4005-931e-66b349fbb10a",
+          "694557c5-5998-4753-a276-87511164af6b"
+        ]
+      },
+      {
+        "label": "RTO in Tagen",
+        "description": "Manueller oder teilautomatisierter Neuaufbau der Umgebung aus Datensicherungen. Bietet maximale technologische Souveränität bei geringster operativer Komplexität, bedeutet aber höhere Ausfallzeiten.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "8a8eb73c-7913-465e-af07-676e3d785244",
+          "b365ba1e-ca5b-4bf8-9716-6c18bc52692c"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-EXIT-01",
+    "category": "Abstraktionsgrad & Portabilität",
+    "topic": "Vendor Exit",
+    "stimulus": "Der aktuelle Cloud-Anbieter ändert unerwartet strategische Konditionen gravierend zu Ungunsten des Betreibers. Die Unternehmensführung ordnet daraufhin die vollständige Notfall-Migration des Systems zu einer alternativen Plattform innerhalb eines engen Zeitfensters an.",
+    "metric_question": "Welche architektonische Strategie liegt einem potenziellen System-Exit zugrunde?",
+    "rationale": "Die Exit-Strategie bewertet die realistische Portabilität der Gesamtlösung. Ein garantierter Kurzfrist-Exit erzwingt absolute Standardisierung und den Verzicht auf tiefgreifende Provider-Innovationen zur Wahrung der Souveränität.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Garantierter Kurzfrist-Exit (< 30 Tage)",
+        "description": "Durch absolute Standardisierung ist ein Notfall-Umzug innerhalb weniger Wochen (< 30 Tage) technisch und operativ garantiert.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "c993e005-aa50-4eb6-8d3d-446cd79a0cc5"
+        ]
+      },
+      {
+        "label": "Standardisierte / Mittelfristige Migration (1–6 Monate)",
+        "description": "Ein Ausstieg basiert auf offenen Standards und portablen Diensten, erfordert jedoch eine geplante Migrationsphase von 1 bis 6 Monaten.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "8d11e93d-c06e-49f6-aac6-510d51018a84"
+        ]
+      },
+      {
+        "label": "Komplexe Re-Architektur (> 6 Monate)",
+        "description": "Ein Umzug ist durch interne Anpassungen machbar, bedarf aber wegen technischer Abhängigkeiten eines längeren Migrationsprojekts (> 6 Monate).",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "bada1a66-a203-48bf-a20c-5151dd4523c8"
+        ]
+      },
+      {
+        "label": "Keine Exit-Strategie (Vendor Lock-in)",
+        "description": "Die Anwendung ist an den Provider gebunden. Ein Exit käme einer kompletten Neuentwicklung gleich.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "dfa6b358-fa52-4d9d-a075-14757316b19a"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-FAIL-01",
+    "category": "Resilienz & Verfügbarkeit",
+    "topic": "Globales Failover-Routing",
+    "stimulus": "Bei einem regionalen Standortausfall muss eingehender Produktions-Traffic auf eine Ausweichregion umgeleitet werden. Die zentrale Architekturentscheidung ist, wer die Kontrollebene (Control Plane) dieses Routing-Failovers besitzt – und welche Abhängigkeiten, Reaktionszeiten und operativen Verantwortlichkeiten man dafür akzeptiert.",
+    "metric_question": "Wer kontrolliert die Failover-Routing-Infrastruktur, und welcher Grad an Provider-Abhängigkeit wird dafür in Kauf genommen?",
+    "rationale": "Die Kontrolle über das Failover-Routing ist ein direkter Souveränitäts-Hebel: Provider-integrierte Lösungen liefern die schnellsten Failover-Zeiten, binden aber die gesamte Netzwerk-Steuerungsebene an einen Anbieter. Selbst verwaltete Lösungen wahren die volle Netzwerk-Souveränität, erfordern aber tiefes Routing-Know-how und akzeptieren langsamere Reaktionszeiten.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Provider-integriertes Globales Routing",
+        "description": "Vollständige Nutzung der globalen Netzwerk-Infrastruktur des Cloud-Providers (Anycast, Backbone-Routing, integrierte Health Checks). Liefert die schnellsten Failover-Zeiten, bindet aber die gesamte Traffic-Steuerungsebene an den Provider.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "9fae4989-8c85-412d-9563-4ac6e054fc4e"
+        ]
+      },
+      {
+        "label": "Extern verwaltetes Failover (Third-Party GSLB/DNS)",
+        "description": "Auslagerung der Failover-Steuerung an einen spezialisierten Drittanbieter, der unabhängig vom Infrastruktur-Provider agiert. Ermöglicht Failover zwischen verschiedenen Providern und Rechenzentren, schafft aber eine neue externe Abhängigkeit auf DNS-/Routing-Ebene.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-failover-thirdparty"
+        ]
+      },
+      {
+        "label": "Selbst verwaltetes Failover (Open-Source / On-Premises)",
+        "description": "Betrieb einer eigenen Failover-Routing-Infrastruktur mit Open-Source-Werkzeugen (z.B. k8gb, CoreDNS) oder eigener Netzwerk-Hardware. Volle Kontrolle über Routing-Entscheidungen und Netzwerk-Souveränität bei hoher operativer Eigenverantwortung.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "dd439c99-8608-447b-b364-86eb3fb75353"
+        ]
+      },
+      {
+        "label": "Kein automatisiertes Failover (Manuelles Umschalten)",
+        "description": "Bewusster Verzicht auf automatisiertes Routing-Failover. Im Störungsfall wird manuell per Runbook umgeschaltet. Maximale Netzwerk-Autarkie und geringe laufende Komplexität, aber signifikante Ausfallzeiten im Disaster-Fall.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-static-routing"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-FIN-01",
+    "category": "Betrieb & Kontrolle",
+    "topic": "Kostenstruktur & FinOps",
+    "stimulus": "Die Infrastrukturkosten müssen langfristig geplant werden. Während Public Clouds flexible (OpEx), aber bei Skalierung teure laufende Kosten erzeugen, erfordern souveräne On-Premises-Ansätze oft hohe Vorabinvestitionen (CapEx).",
+    "metric_question": "Welche finanzielle Strategie wird für die Infrastruktur bevorzugt?",
+    "rationale": "Souveräne Infrastrukturen verschieben die Kosten oft von variablen Nutzungsgebühren zu hohen, fixen Vorabinvestitionen in eigene Hardware.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Maximale Flexibilität (Pay-as-you-go / OpEx)",
+        "description": "Strikte Vermeidung von Vorabinvestitionen in Hardware zugunsten nutzungsabhängiger Cloud-Miete.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-fin-opex"
+        ]
+      },
+      {
+        "label": "Hybride Kostenkontrolle (Commitments)",
+        "description": "Mischmodell aus variablen Kosten und vertraglichen Langzeitbindungen zur Preisoptimierung.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-fin-hybrid"
+        ]
+      },
+      {
+        "label": "Vorabinvestition für fixe Laufkosten (CapEx)",
+        "description": "Bereitschaft für hohe initiale Kapitalinvestitionen, um die monatlichen variablen Kosten zu minimieren.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-fin-capex"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-GEO-01",
+    "category": "Performance & Latenz",
+    "topic": "Geografische Datenresidenz vs. Verteilte Architektur",
+    "stimulus": "Das System muss geringe Latenzen für räumlich verteilte Endpunkte oder angebundene Subsysteme gewährleisten, während strenge regulatorische Vorgaben eine exakt definierte Datenhoheit erfordern.",
+    "metric_question": "Wie wird die räumliche und physische Platzierung der Systemkomponenten priorisiert?",
+    "rationale": "Dieses Szenario adressiert den Zielkonflikt zwischen dezentraler Performance und lokaler Datenhoheit. Verteilte Architekturen verbessern die Latenz an den Endpunkten, erfordern jedoch komplexe Maßnahmen, um regulatorische Vorgaben zur physischen Datenresidenz nicht zu verletzen.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Globale Multi-Region Replikation",
+        "description": "Daten werden über weltweite Cloud-Regionen verteilt, um globale Latenzen zu minimieren (akzeptiert grenzüberschreitende Datenflüsse).",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "295fbd78-30a3-445d-be67-2f161ce6776a"
+        ]
+      },
+      {
+        "label": "Strikte Datenresidenz (EU-Regionen)",
+        "description": "Workloads nutzen flexible Cloud-Regionen und Zonen, sind jedoch strikt auf einen definierten Rechtsraum (z. B. EU) begrenzt.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "6b2ff53e-f0f4-48f3-a0ae-d8cce96d3f4b"
+        ]
+      },
+      {
+        "label": "Single-Site",
+        "description": "Das System läuft an einem einzigen, physisch isolierten Standort (Single Datacenter / On-Premises) für maximale lokale Standortkontrolle.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "871bebf7-adb0-4fae-a716-f3626ebe0276"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-GRAV-01",
+    "category": "Abstraktionsgrad & Portabilität",
+    "topic": "Data Gravity & Speicherarchitektur",
+    "stimulus": "Über Jahre hinweg akkumuliert das System massive Datenmengen (z. B. Data Lake, Telemetrie, Medien). Bei einem späteren Providerwechsel erweisen sich Egress-Gebühren und proprietäre Datenformate als unüberwindbarer Lock-in ('Data Gravity').",
+    "metric_question": "Mit welcher Strategie begegnet die Architektur dem Risiko der Data Gravity und dem Daten-Lock-in?",
+    "rationale": "Data Gravity erzeugt durch hohe Migrationskosten und proprietäre Formate einen massiven Lock-in. Während proprietäre Cloud-Datendienste maximale Performance bieten, erfordern souveräne Ansätze offene Formate, synchrone Multi-Cloud-Replikation oder eine hybride Partitionierung der Datenmengen.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Proprietäre Cloud-Datendienste",
+        "description": "Nutzung provider-spezifischer, proprietärer Speicherdienste und Datenbanken. Maximiert Performance und Ökosystem-Integration bei bewusster Akzeptanz von Format- und Data-Gravity-Lock-in.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "e0df2a9a-d7e1-42f0-a4f2-494b36056dcf"
+        ]
+      },
+      {
+        "label": "Offene Datenformate & Agnostische APIs",
+        "description": "Speicherung zentral in der Cloud, aber strikt in herstellerneutralen Datenformaten (z. B. Parquet, Iceberg) über Standard-APIs (S3). Verhindert Format-Lock-in, belässt aber das Egress-Risiko bei einem Provider-Wechsel.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "0221d800-383d-4883-abff-a513503c1e81"
+        ]
+      },
+      {
+        "label": "Provider-übergreifende Speichersynchronisation",
+        "description": "Kontinuierliche, asynchrone Replikation der Massendaten zwischen zwei oder mehr unabhängigen Cloud-Providern. Eliminierung von Migrations- und Egress-Barrieren im laufenden Betrieb.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-multi-provider-data-sync"
+        ]
+      },
+      {
+        "label": "Hybride Datenhaltung",
+        "description": "Physische Trennung: Massen- und Rohdaten verbleiben im eigenen Rechenzentrum / Private Cloud; nur gefilterte oder aggregierte Datensätze fließen für Cloud-Analysen ab.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "5693317a-ebba-4fe5-bfc8-410e212d7046"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-IAM-01",
+    "category": "Sicherheit & Identität",
+    "topic": "Identitätsverwaltung",
+    "stimulus": "Für die Plattform muss das zentrale Authentifizierungs- und Benutzerverwaltungsmodell (Identity Management) definiert werden. Es gilt architektonisch festzulegen, auf welche Weise Identitäten authentifiziert, verwaltet und systemübergreifend eingebunden werden.",
+    "metric_question": "Wer stellt den Identitäts-Dienst (Identity Provider) bereit?",
+    "rationale": "Identitätsverwaltung ist der zentrale Zugangsvektor des Systems. Managed Cloud Identities schaffen eine starke Anbieterbindung, während föderierte oder selbstverwaltete Identitäten die Autarkie der Nutzerverwaltung sicherstellen.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Managed Cloud Identity",
+        "description": "Nutzung der verwalteten Identitätsdienste des Cloud-Providers.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "4b86ab44-1d97-49b7-ba19-45604c058d0e"
+        ]
+      },
+      {
+        "label": "Federated Identity",
+        "description": "Kopplung des Systems an ein bestehendes, externes Unternehmens-Verzeichnis via Standardprotokollen (SAML/OIDC).",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "dcddc55d-87b3-4d0a-9400-b12693284f67"
+        ]
+      },
+      {
+        "label": "Self-Managed Identity",
+        "description": "Betrieb einer eigenen Authentifizierungssoftware ohne Abhängigkeit von Managed Services.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "c1560071-a9ff-4681-9fd8-740f9d797f5c"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-KMS-01",
+    "category": "Sicherheit & Identität",
+    "topic": "Schlüsselverwaltung & Verschlüsselung",
+    "stimulus": "Zur Gewährleistung der Vertraulichkeit ruhender und verarbeiteter Daten muss die Strategie zur Generierung, Verwahrung und Kontrolle der kryptografischen Schlüssel festgelegt werden. Es gilt architektonisch zu bestimmen, in wessen Verfügungsgewalt sich die Verschlüsselungsschlüssel befinden.",
+    "metric_question": "Wie tiefgreifend soll die eigene Kontrolle über die kryptografischen Schlüssel und deren Verwahrung sein?",
+    "rationale": "Dieses Szenario beschreibt den Zielkonflikt zwischen der Bequemlichkeit providerverwalteter Standard-Verschlüsselung und der absoluten Datenhoheit durch kundenverwaltete Schlüssel (BYOK) oder externe Hardware-Sicherheitsmodule (HYOK).",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Provider-Managed Verschlüsselung (SSE)",
+        "description": "Automatische Verschlüsselung aller Daten durch den Cloud-Anbieter mit providerverwalteten Schlüsseln. Minimaler Aufwand, aber der Provider besitzt technisch die volle Entschlüsselungsfähigkeit.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-kms-provider"
+        ]
+      },
+      {
+        "label": "Cloud-Native KMS (Kundenverwaltete Schlüssel & BYOK)",
+        "description": "Verwaltung der Schlüssel in einem dedizierten Key Management Service (KMS) des Cloud-Anbieters mit eigener Kontrolle über Zugriffspolizien und Schlüsselrotation. Schließt das Einbringen von eigenem Schlüsselmaterial (BYOK) ein.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "16fe461d-d574-453a-981e-b8ec5f1a6b75"
+        ]
+      },
+      {
+        "label": "Client-Side Encryption (CSE)",
+        "description": "Verschlüsselung der Daten auf Anwendungsseite vor der Übertragung in die Cloud. Der Cloud-Anbieter speichert nur Chiffretext und hat ohne den Kundenschlüssel keinen Zugriff auf Klartextdaten.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "e0309af2-c04c-49c5-8b19-b7e3f55a8671"
+        ]
+      },
+      {
+        "label": "External Key Management (HYOK / Externes HSM)",
+        "description": "Verwahrung und Erzeugung der Master-Schlüssel in einem externen Hardware Security Module (HSM) außerhalb der Cloud-Infrastruktur. Maximale kryptografische Autarkie gegenüber Drittstaatenzugriffen.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "ccef4538-ac00-463c-927a-a7bbf2774aed"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-MID-01",
+    "category": "Architektur & Infrastruktur",
+    "topic": "Zentrale Middleware & Integration",
+    "stimulus": "Das System nutzt zentrale Gateways und Message-Broker zur asynchronen Kommunikation und Eingangskontrolle.",
+    "metric_question": "Welches Betriebsmodell liegt dieser zentralen Middleware zugrunde?",
+    "rationale": "Die Integration zentraler Middleware steuert den Nachrichtenfluss. Managed Services bieten höchste Performance, während agnostische Open-Source-Lösungen die Portabilität der Architektur bewahren.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Managed Cloud Services",
+        "description": "Nutzung hochintegrierter Dienste (z.B. AWS API Gateway/SQS) für minimalen Wartungsaufwand. Führt zu starkem Lock-in, bietet aber höchste Skalierbarkeit.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "c976297d-59aa-4d2c-8470-682080e30bed"
+        ]
+      },
+      {
+        "label": "Managed Open-Source",
+        "description": "Cloud-gehostete Standard-Technologien (z.B. Kafka, Kong), die hohe Performance mit einer agnostischen Architektur verbinden.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-open-tech"
+        ]
+      },
+      {
+        "label": "Self-Hosted / Agnostisch",
+        "description": "Eigenbetrieb auf plattformunabhängigen Clustern (IaaS/Kubernetes) für maximale Kontrolle und Portabilität.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "be99fa18-a142-4412-b9b8-a706a9799145"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-NETB-01",
+    "category": "Architektur & Infrastruktur",
+    "topic": "Netzwerkanbindung",
+    "stimulus": "Für die kontinuierliche Datenübertragung, Replikation und Ausfallsicherheit einer georedundanten Anwendungsarchitektur über zwei oder mehr geografisch getrennte Rechenzentrumsstandorte wird eine verlässliche Netzwerkanbindung benötigt.",
+    "metric_question": "Welches netzwerktechnische Kopplungsmodell wird primär für den Datenaustausch zwischen den georedundanten Standorten genutzt?",
+    "rationale": "Die Netzwerkanbindung georedundanter Standorte bestimmt Latenz, Bandbreite, Kosten und Souveränität. Während Cloud-Backbones hohe SLAs und Performance bieten, erfordern sie eine stärkere Provider-Bindung, wogegen VPN-Lösungen agnostisch, aber latenzanfälliger sind.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Cloud-Provider Private Backbone",
+        "description": "Nutzung des dedizierten privaten Glasfaser-Backbones des Cloud-Anbieters für den standort- und regionenübergreifenden Transit mit hohen SLAs und geringer Latenz.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-cloud-backbone"
+        ]
+      },
+      {
+        "label": "Site-to-Site VPN",
+        "description": "IPsec-verschlüsselter Tunnel über das öffentliche Internet als anbieterneutrales, kosteneffizientes Kopplungsmodell für beliebige Standorte.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "963793c7-7a6d-401b-a205-b05aed301972"
+        ]
+      },
+      {
+        "label": "Dedizierte Standleitung (z.B. Direct Connect / ExpressRoute)",
+        "description": "Physisch oder logisch garantierte private Direktverbindung zwischen den Standorten (z.B. Direct Connect/ExpressRoute zur Cloud oder Mietleitung/Dark Fiber zwischen eigenen RZs).",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "3be98970-aae5-49a7-9989-fc92cd62a010"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-REP-01",
+    "category": "Datenkonsistenz & Integrität",
+    "topic": "Tolerierbarer Datenverlust (RPO)",
+    "stimulus": "Bei einem schweren Infrastrukturausfall bestimmt das Replikations- und Datensicherungskonzept, wie viele Datenminuten oder -stunden unwiederbringlich verloren gehen.",
+    "metric_question": "Welcher maximale Datenverlust (RPO) ist im Katastrophenfall aus fachlicher Sicht tolerierbar?",
+    "rationale": "Definiert den Kompromiss zwischen absoluter Datengarantie (synchron) und architektonischer Entkopplung (asynchron/backup-basiert).",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "RPO = 0",
+        "description": "Synchrones Schreiben über mehrere Standorte. Garantiert vollständigen Erhalt aller Transaktionen, erhöht jedoch die Schreib-Latenz und die Vendor-Kopplung.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-rpo-zero"
+        ]
+      },
+      {
+        "label": "RPO im Sekunden- bis Minutenbereich",
+        "description": "Asynchrone Replikation in Echtzeit. Verbindet minimalen Datenverlust mit hoher Performance und flexibler Cloud-Verteilung.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-rpo-near-zero"
+        ]
+      },
+      {
+        "label": "RPO im Stunden- bis Tagesbereich",
+        "description": "Wiederherstellung aus periodischen Schnappschüssen. Geringste operative Komplexität, bedeutet aber Datenverlust von Stunden bis Tagen im Ernstfall.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-rpo-relaxed"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-SLA-01",
+    "category": "Resilienz & Verfügbarkeit",
+    "topic": "System-Verfügbarkeit (SLAs)",
+    "stimulus": "Die Plattform unterstützt kritische Prozesse. Ausfälle verursachen sofortige wirtschaftliche und vertragliche Strafen.",
+    "metric_question": "Welche verbindliche Verfügbarkeit (SLA) wird vom System auf konzeptioneller Ebene garantiert?",
+    "rationale": "Die angestrebte Verfügbarkeit bestimmt die architektonische Abhängigkeit von globalen Infrastrukturen. SLAs über 99,99% sind typischerweise nur durch Hyperscaler-Infrastrukturen erreichbar und erzwingen tiefe Integration. Niedrigere SLA-Ziele erlauben souveränere, autarke Betriebsmodelle.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Geschäftskritisch (>= 99,99 %)",
+        "description": "Erlaubt praktisch keine ungeplanten Downtimes und erzwingt oft den Einsatz spezialisierter, hochredundanter Cloud-Plattformen.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "928f9ebf-9ede-49cf-aab7-d02e6830a5a6"
+        ]
+      },
+      {
+        "label": "Standard-Betrieb (99.9%)",
+        "description": "Branchenstandard, der begrenzte, kurze Ausfälle für reguläre Wartung toleriert.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "cb779b5a-b0a5-424f-91bc-4fae269154c5"
+        ]
+      },
+      {
+        "label": "Best-Effort",
+        "description": "Es gibt keine harten Strafen für Ausfälle, was den Betrieb autarker, lokaler Hardware ohne Millionenbudgets erlaubt.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "20b6d822-ec88-4b58-bb2b-b309793839bb"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-SOC-01",
+    "category": "Sicherheit & Identität",
+    "topic": "Security Monitoring & Incident Response (SIEM/SOC)",
+    "stimulus": "Cyber-Bedrohungen erfordern eine kontinuierliche Auswertung von Systemprotokollen sowie eine sofortige, qualifizierte Reaktion auf Sicherheitsvorfälle.",
+    "metric_question": "Welches technologische und personelle Betriebsmodell wird für die Sicherheitsüberwachung (SIEM) und das Kontrollzentrum (SOC) gewählt?",
+    "rationale": "Dieses Szenario bewertet die Balance zwischen Datenhoheit und personeller Belastung. Vollständig gemanagte Provider-Dienste eliminieren den Personalaufwand fast komplett, erzwingen aber den Kontrollverlust über Sicherheitsdaten. Ein autarkes, internes SOC bewahrt die volle Souveränität, erfordert jedoch enorme 24/7-Personalkapazitäten und tiefgreifende Expertise.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "Provider-Managed Security",
+        "description": "Nutzung nativer Provider-Tools inklusive automatisierter oder providergesteuerter Bedrohungsabwehr. Minimaler Personalaufwand, aber vollständiger Lock-in der Sicherheitsintelligenz.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "c8c5a75d-238b-4715-ab54-0b24369b2a2f"
+        ]
+      },
+      {
+        "label": "Hybrides Modell",
+        "description": "Log-Daten werden in eine providerunabhängige Plattform exportiert und dort von einem eigenen Team (zu Bürozeiten) oder einem externen Security-Dienstleister ausgewertet. Hohe Portabilität bei vertretbarem internen Personalaufwand.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "45be796a-69d3-4069-a33b-800ca3228677"
+        ]
+      },
+      {
+        "label": "Souveränes In-House SOC (Self-Managed)",
+        "description": "Betrieb einer eigenen, isolierten Analyse-Plattform durch ein dediziertes, internes 24/7-Security-Team. Garantiert maximale Datenhoheit und Unabhängigkeit bei extremer personeller und operativer Komplexität.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "70ccb9b3-e77a-4634-a7c3-aa82174afdd0"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": "SCN-TEAM-01",
+    "category": "Betrieb & Kontrolle",
+    "topic": "Operative Betreiberkompetenz (Skills & Automatisierung)",
+    "stimulus": "Der dauerhafte Systembetrieb erfordert kontinuierliche Wartung, Fehlerbehebung und Skalierung. Es muss definiert werden, welches personelle und prozessuale Kompetenzniveau für die Infrastruktur intern vorgehalten wird.",
+    "metric_question": "Welches Maß an operativer Betreiberkompetenz und Infrastruktur-Automatisierung ist intern vorhanden bzw. strategisch gewollt?",
+    "rationale": "Die personelle Kapazität ist ein limitierender Faktor für die digitale Souveränität. Komplexe, providerunabhängige Architekturen (z. B. IaaS, Self-Hosted) erfordern dediziertes Betriebspersonal, während stark gemanagte Services den Aufwand auf den Provider auslagern.",
+    "flagged": false,
+    "flagComment": null,
+    "options": [
+      {
+        "label": "DevOps & Applikations-Fokus",
+        "description": "Fokus des Teams auf DevOps und die Anwendungsebene. Infrastrukturnahe Aufgaben (wie OS-Patching und Basis-Skalierung) werden als Managed Service an den Cloud-Provider delegiert.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-ops-noops"
+        ]
+      },
+      {
+        "label": "Plattform-Engineering & Automatisierung",
+        "description": "Aufbau herstellerneutraler Automatisierungskompetenz (IaC, CI/CD). Das interne Team steuert die Plattform-Architektur eigenständig und stellt Entwicklerteams Self-Service-Werkzeuge bereit.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-ops-platform"
+        ]
+      },
+      {
+        "label": "Autarker Eigenbetrieb",
+        "description": "Vollständige Beherrschung der Basisinfrastruktur (Betriebssysteme, eigene Cluster, Datenbank-Engines auf IaaS/Bare-Metal) mit 24/7-Bereitschaft für maximale operative Autarkie.",
+        "flagged": false,
+        "flagComment": null,
+        "referenced_requirements": [
+          "req-ops-sre"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Abstraktionsgrad & Portabilität",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  },
+  {
+    "name": "Architektur & Infrastruktur",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  },
+  {
+    "name": "Betrieb & Kontrolle",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  },
+  {
+    "name": "Datenkonsistenz & Integrität",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  },
+  {
+    "name": "Digitale Souveränität",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  },
+  {
+    "name": "Performance & Latenz",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  },
+  {
+    "name": "Resilienz & Verfügbarkeit",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  },
+  {
+    "name": "Sicherheit & Identität",
+    "prefix": "REQ",
+    "uid": null,
+    "goal": null
+  }
+]

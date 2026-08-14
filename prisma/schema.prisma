@@ -1,0 +1,104 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Category {
+  name            String           @id
+  prefix          String
+  uid             String?          @unique
+  goal            String?
+  categoryImpacts CategoryImpact[]
+  groups          Group[]
+}
+
+model Group {
+  id           String        @id
+  name         String
+  type         String
+  uid          String?       @unique
+  categoryName String
+  category     Category      @relation(fields: [categoryName], references: [name], onDelete: Cascade)
+  requirements Requirement[]
+}
+
+model Requirement {
+  uid             String           @id
+  name            String
+  description     String
+  groupId         String?
+  flagged         Boolean          @default(false)
+  flagComment     String?
+  categoryImpacts CategoryImpact[]
+  conflicts1      Conflict[]       @relation("req1")
+  conflicts2      Conflict[]       @relation("req2")
+  group           Group?           @relation(fields: [groupId], references: [id])
+  scenarioOptions ScenarioOption[] @relation("OptionRequirements")
+}
+
+model Scenario {
+  id             String           @id
+  category       String
+  topic          String
+  stimulus       String
+  metricQuestion String
+  flagged        Boolean          @default(false)
+  flagComment    String?
+  rationale      String?
+  options        ScenarioOption[]
+}
+
+model ScenarioOption {
+  id           Int           @id @default(autoincrement())
+  scenarioId   String
+  label        String
+  description  String
+  flagged      Boolean       @default(false)
+  flagComment  String?
+  scenario     Scenario      @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  requirements Requirement[] @relation("OptionRequirements")
+}
+
+model Conflict {
+  id            Int         @id @default(autoincrement())
+  req1Id        String
+  req2Id        String
+  status        String
+  conflictText  String
+  bestPractice  String?
+  isGroundTruth Boolean     @default(false)
+  req1          Requirement @relation("req1", fields: [req1Id], references: [uid], onDelete: Cascade)
+  req2          Requirement @relation("req2", fields: [req2Id], references: [uid], onDelete: Cascade)
+
+  @@unique([req1Id, req2Id])
+}
+
+model CategoryImpact {
+  id            Int         @id @default(autoincrement())
+  requirementId String
+  categoryName  String
+  status        String
+  reasoning     String
+  isGroundTruth Boolean     @default(false)
+  category      Category    @relation(fields: [categoryName], references: [name], onDelete: Cascade)
+  requirement   Requirement @relation(fields: [requirementId], references: [uid], onDelete: Cascade)
+
+  @@unique([requirementId, categoryName])
+}
+
+model DecisionTree {
+  id   String @id
+  name String
+  data String
+}
+
+model Session {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  data      String
+}

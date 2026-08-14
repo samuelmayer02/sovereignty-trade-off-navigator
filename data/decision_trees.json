@@ -1,0 +1,440 @@
+[
+  {
+    "id": "jurisdictional-data-sovereignty",
+    "title": "Jurisdiktionelle & Daten-Souveränität",
+    "description": "Fokus auf Rechtliche Bindung, Datenresidenz, Zugriffskontrolle und Provider-Nationalität.",
+    "startNode": "q1",
+    "nodes": {
+      "q1": {
+        "name": "Rechtsrahmen & Gerichtsstand",
+        "text": "Darf der Vertrag mit dem Cloud Service Provider (CSP) ausländischem Recht unterliegen, oder muss vertraglich zwingend europäisches Recht gelten (auch wenn beim CSP verbleibende Zugriffsrisiken wie der US CLOUD Act bestehen)?",
+        "options": [
+          {
+            "label": "Drittstaatenrecht (SEAL-0)",
+            "target": "end-0",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "EU-Recht vertraglich (SEAL-1)",
+            "target": "q2",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn formales EU-Recht gefordert (Sprung auf SEAL-1):",
+            "interimResult": "SEAL-1: Jurisdiktional",
+            "rationale": "EU-Gerichtsstand bietet zivilrechtlichen Schutz bei minimalem Betriebsaufwand. Bei Nicht-EU-Anbietern schützt rein vertragliches EU-Recht jedoch nicht vor extraterritorialen Behördenzugriffen (z. B. US CLOUD Act)."
+          }
+        ]
+      },
+      "q2": {
+        "name": "Physische Datenresidenz",
+        "text": "Genügt ein rein vertraglicher Schutz mit dem Cloud Service Provider (SEAL-1), oder müssen die Daten durch den CSP zwingend physisch und logisch exklusiv in EU-Rechenzentren gespeichert und verarbeitet werden (SEAL-2)?",
+        "options": [
+          {
+            "label": "EU-Recht reicht aus",
+            "target": "end-1",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Physische Residenz (SEAL-2)",
+            "target": "q3",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn Datenresidenz gefordert (Sprung auf SEAL-2):",
+            "interimResult": "SEAL-2: Datensouveränität",
+            "rationale": "Verhindert ungewollten Datenabfluss in Drittstaaten im Regelbetrieb. Schränkt Cloud-Regionen und Datentransfers strikt auf die EU ein, löst aber nicht das Durchgriffsrisiko ausländischer Gesetze auf den Provider."
+          }
+        ]
+      },
+      "q3": {
+        "name": "Kryptografische Autarkie",
+        "text": "Reicht die physische Datenresidenz in der EU aus (SEAL-2), oder fordern Sie die effektive Kontrolle über den kryptografischen Zugriff (z. B. Bring Your Own Key / BYOK), sodass Sie durch die Hoheit über den Schlüssel-Lebenszyklus den Datenzugriff jederzeit selbst unterbinden können (SEAL-3)?",
+        "options": [
+          {
+            "label": "Datenresidenz reicht",
+            "target": "end-2",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Aktiver Zugriffsschutz / BYOK (SEAL-3)",
+            "target": "q4",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn BYOK/Verschlüsselung gefordert (Sprung auf SEAL-3):",
+            "interimResult": "SEAL-3: Digitale Resilienz",
+            "rationale": "Gibt Ihnen die 'effektive Kontrolle' über den kryptografischen Zugriff (gemäß SOV-3). Der Provider hat zwar für die Verarbeitung Zugriff auf das KMS, Sie können die Daten jedoch jederzeit durch Schlüssel-Revokation (Krypto-Shredding) unbrauchbar machen. Erhöht die operative Komplexität, da die eigene Schlüsselinfrastruktur (BYOK) fehlerfrei betrieben werden muss."
+          }
+        ]
+      },
+      "q4": {
+        "name": "Provider-Nationalität & Eigentum",
+        "text": "Darf als Cloud Service Provider (CSP) ein US-Hyperscaler oder Drittstaaten-Unternehmen mit EU-Niederlassung fungieren (SEAL-3), oder muss der CSP ein reines EU-Unternehmen / eine Sovereign Cloud ohne ausländischen Mutterkonzern sein (SEAL-4)?",
+        "options": [
+          {
+            "label": "Drittstaaten-Provider akzeptiert",
+            "target": "end-3",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Reine EU-Entität (SEAL-4)",
+            "target": "end-4",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn reine EU-Entität gefordert (Sprung auf SEAL-4):",
+            "interimResult": "SEAL-4: Volle Souveränität",
+            "rationale": "Sichert vollständige Unabhängigkeit von ausländischen Jurisdiktionen (CLOUD Act). Erfordert strikte Isolierung oder Nutzung dedizierter EU-Anbieter mit strengen Zertifizierungen (BSI C5 / SecNumCloud)."
+          }
+        ]
+      }
+    },
+    "results": {
+      "end-0": {
+        "title": "SEAL-0",
+        "level": 0,
+        "referenced_requirements": [
+          "b9382316-71cc-46fe-9f45-6c357af93513",
+          "295fbd78-30a3-445d-be67-2f161ce6776a",
+          "req-kms-provider"
+        ]
+      },
+      "end-1": {
+        "title": "SEAL-1",
+        "level": 1,
+        "referenced_requirements": [
+          "d214275a-9196-4e73-a656-5148ab24c831",
+          "295fbd78-30a3-445d-be67-2f161ce6776a",
+          "16fe461d-d574-453a-981e-b8ec5f1a6b75"
+        ]
+      },
+      "end-2": {
+        "title": "SEAL-2",
+        "level": 2,
+        "referenced_requirements": [
+          "d214275a-9196-4e73-a656-5148ab24c831",
+          "6b2ff53e-f0f4-48f3-a0ae-d8cce96d3f4b",
+          "16fe461d-d574-453a-981e-b8ec5f1a6b75"
+        ]
+      },
+      "end-3": {
+        "title": "SEAL-3",
+        "level": 3,
+        "referenced_requirements": [
+          "d214275a-9196-4e73-a656-5148ab24c831",
+          "6b2ff53e-f0f4-48f3-a0ae-d8cce96d3f4b",
+          "e0309af2-c04c-49c5-8b19-b7e3f55a8671"
+        ]
+      },
+      "end-4": {
+        "title": "SEAL-4",
+        "level": 4,
+        "referenced_requirements": [
+          "req-jurisdiction-eu-entity",
+          "6b2ff53e-f0f4-48f3-a0ae-d8cce96d3f4b",
+          "e0309af2-c04c-49c5-8b19-b7e3f55a8671",
+          "req-audit-sovereign-cert"
+        ]
+      }
+    }
+  },
+  {
+    "id": "technological-sovereignty",
+    "title": "Technologische Souveränität",
+    "description": "Fokus auf Architektonische Autarkie, offene Standards, Vermeidung von Lock-in (Unabhängig vom Standort/Provider).",
+    "startNode": "q1",
+    "nodes": {
+      "q1": {
+        "name": "Daten-Portabilität & Formate",
+        "text": "Akzeptieren Sie die Cloud-Infrastruktur des Cloud Service Providers als Blackbox (SEAL-0), oder fordern Sie vom CSP zumindest dokumentierte Architekturen und standardisierte Export-Schnittstellen für eine spätere Datenmigration (SEAL-1)?",
+        "options": [
+          {
+            "label": "Proprietäre Blackbox reicht (SEAL-0)",
+            "target": "end-0",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Architektur-Transparenz & Daten-Export (SEAL-1)",
+            "target": "q2",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn technologische Transparenz gefordert (Sprung auf SEAL-1):",
+            "interimResult": "SEAL-1: Vertraglicher Exit",
+            "rationale": "Sichert Transparenz und Datenexport bei geringem Aufwand. Der Stack bleibt proprietär; Datenherausgabe ist garantiert, schützt aber nicht vor Re-Engineering-Kosten beim Provider-Wechsel (> 6 Monate)."
+          }
+        ]
+      },
+      "q2": {
+        "name": "Schnittstellen-Agnostizismus",
+        "text": "Akzeptieren Sie anbieterspezifische, proprietäre Schnittstellen des Cloud Service Providers (z. B. herstellerspezifische SDKs), oder fordern Sie herstellerneutrale Protokolle (z. B. SQL, S3-API, AMQP), damit Ihr eigener Applikations-Code unabhängig vom CSP bleibt (SEAL-2)?",
+        "options": [
+          {
+            "label": "Proprietäre Schnittstellen okay",
+            "target": "end-1",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Offene Schnittstellen (SEAL-2)",
+            "target": "q3",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn offene Schnittstellen gefordert (Sprung auf SEAL-2):",
+            "interimResult": "SEAL-2: Technische Transparenz",
+            "rationale": "Hält eigenen Applikationscode durch offene Protokolle (z. B. SQL, S3) providerneutral. Der dahinterliegende verwaltete Dienst bleibt jedoch proprietär und an den Anbieter gebunden."
+          }
+        ]
+      },
+      "q3": {
+        "name": "Stack-Portabilität & Containerisierung",
+        "text": "Reicht eine offene Schnittstelle bei proprietären Diensten des Cloud Service Providers (SEAL-2), oder muss der gesamte Software-Stack selbst portabel sein (z. B. via Kubernetes/Container), um ihn ohne Re-Engineering zu einem anderen CSP verschieben zu können (SEAL-3)?",
+        "options": [
+          {
+            "label": "Proprietäre Services (mit offenen Schnittstellen) okay",
+            "target": "end-2",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Agnostischer Stack & Container (SEAL-3)",
+            "target": "q4",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn agnostische Kerntechnologie gefordert (Sprung auf SEAL-3):",
+            "interimResult": "SEAL-3: Agnostischer Stack",
+            "rationale": "Ermöglicht echte technische Portabilität der Komponenten auf anderen Cloud-Plattformen. Minimiert den Vendor-Lock-in, erhöht jedoch den eigenen Betriebs- und Orchestrierungsaufwand (z. B. Kubernetes/Terraform)."
+          }
+        ]
+      },
+      "q4": {
+        "name": "Software-Autarkie & Open Source",
+        "text": "Genügt die Nutzung portabler, quelloffener Kerntechnologien im Managed Service (SEAL-3), oder fordern Sie den ausschließlichen Einsatz und autarken Betrieb von Open-Source-Software (Full Open Source), um den Code unabhängig vom Cloud-Provider auditieren und anpassen zu können (SEAL-4)?",
+        "options": [
+          {
+            "label": "Portabilität reicht",
+            "target": "end-3",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Full Open Source (SEAL-4)",
+            "target": "end-4",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn Open Source gefordert (Sprung auf SEAL-4):",
+            "interimResult": "SEAL-4: Technologie-Souveränität",
+            "rationale": "Vollständige technologische Autarkie ohne proprietären Vendor-Lock-in und mit extrem kurzen Migrationszeiten (< 30 Tage). Maximale operative Komplexität: Eigenes Team übernimmt volle Verantwortung für den Open-Source-Stack."
+          }
+        ]
+      }
+    },
+    "results": {
+      "end-0": {
+        "title": "SEAL-0",
+        "level": 0,
+        "referenced_requirements": [
+          "c976297d-59aa-4d2c-8470-682080e30bed",
+          "0802520d-f3e2-4fe8-95f5-2c11267f7042",
+          "5c012594-5139-45cf-912f-af6a3f967db2"
+        ]
+      },
+      "end-1": {
+        "title": "SEAL-1",
+        "level": 1,
+        "referenced_requirements": [
+          "req-arch-transparency",
+          "0221d800-383d-4883-abff-a513503c1e81",
+          "c976297d-59aa-4d2c-8470-682080e30bed",
+          "0802520d-f3e2-4fe8-95f5-2c11267f7042",
+          "5c012594-5139-45cf-912f-af6a3f967db2"
+        ]
+      },
+      "end-2": {
+        "title": "SEAL-2",
+        "level": 2,
+        "referenced_requirements": [
+          "req-arch-transparency",
+          "0221d800-383d-4883-abff-a513503c1e81",
+          "req-open-api",
+          "2884de34-9e0f-4770-be27-132e12670903",
+          "bcdd2640-a008-4296-bcfb-ec75320a5318"
+        ]
+      },
+      "end-3": {
+        "title": "SEAL-3",
+        "level": 3,
+        "referenced_requirements": [
+          "req-arch-transparency",
+          "0221d800-383d-4883-abff-a513503c1e81",
+          "req-open-tech",
+          "f2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+          "bcdd2640-a008-4296-bcfb-ec75320a5318"
+        ]
+      },
+      "end-4": {
+        "title": "SEAL-4",
+        "level": 4,
+        "referenced_requirements": [
+          "req-arch-transparency",
+          "0221d800-383d-4883-abff-a513503c1e81",
+          "be99fa18-a142-4412-b9b8-a706a9799145",
+          "req-self-managed-kubernetes",
+          "bcdd2640-a008-4296-bcfb-ec75320a5318"
+        ]
+      }
+    }
+  },
+  {
+    "id": "operational-sovereignty",
+    "title": "Operative Souveränität",
+    "description": "Fokus auf Handlungshoheit im laufenden Betrieb, Support-Strukturen und Notfall-Betrieb.",
+    "startNode": "q1",
+    "nodes": {
+      "q1": {
+        "name": "Support-Lokalisierung & Access",
+        "text": "Akzeptieren Sie, dass der operative Support durch globale Teams des Cloud Service Providers erfolgt (SEAL-0), oder fordern Sie, dass der Support exklusiv durch EU-ansässiges Personal mit lokaler Zugriffskontrolle erbracht wird (SEAL-1)?",
+        "options": [
+          {
+            "label": "Globaler Support akzeptiert",
+            "target": "end-0",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "EU-lokaler Support (SEAL-1)",
+            "target": "q2",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn EU-lokaler Support gefordert (Sprung auf SEAL-1):",
+            "interimResult": "SEAL-1: Trusted Cloud",
+            "rationale": "Support erfolgt exklusiv durch europäische Teams. Minimiert das Risiko von Drittstaaten-Zugriffen in Wartungsfällen, erfordert aber spezialisierte Supportverträge und Transparenz."
+          }
+        ]
+      },
+      "q2": {
+        "name": "Operational Observability & IAM",
+        "text": "Genügt EU-Support (SEAL-1), oder fordern Sie ein Co-Management, bei dem Ihr eigenes Team die Hoheit über IAM-Identitäten, Audit-Logs und Telemetrie gegenüber dem Cloud Service Provider behält (SEAL-2)?",
+        "options": [
+          {
+            "label": "Provider verwaltet Observability",
+            "target": "end-1",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Co-Management / Hybrid (SEAL-2)",
+            "target": "q3",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn Co-Management gefordert (Sprung auf SEAL-2):",
+            "interimResult": "SEAL-2: Co-Management",
+            "rationale": "Sichert direkte Kontrolle über kritische Betriebsfunktionen (eigene Telemetrie & Föderiertes IAM). Erfordert den Aufbau von eigenem Know-how."
+          }
+        ]
+      },
+      "q3": {
+        "name": "Betriebliche Eigenständigkeit",
+        "text": "Reicht das Co-Management mit dem Cloud Service Provider (SEAL-2), oder muss Ihr eigenes Team in der Lage sein, alle wesentlichen Betriebs-, Monitoring- und Security-Tasks (SOC) vollständig autark und unabhängig von den Tools des CSP auszuführen (SEAL-3)?",
+        "options": [
+          {
+            "label": "Co-Management reicht",
+            "target": "end-2",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Eigenständige Verwaltung (SEAL-3)",
+            "target": "q4",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn eigenständige Verwaltung gefordert (Sprung auf SEAL-3):",
+            "interimResult": "SEAL-3: Operative Autarkie",
+            "rationale": "Befähigt Ihr Team, den Betrieb und die Security autark zu überwachen. Verzicht auf vollverwaltete Provider-Delegation."
+          }
+        ]
+      },
+      "q4": {
+        "name": "Physische & Operative Isolation (Autarker Betrieb)",
+        "text": "Darf das System permanent auf die Verfügbarkeit der Cloud-Infrastruktur des Cloud Service Providers angewiesen bleiben (SEAL-3), oder muss es im Notfall auf eigener physischer Infrastruktur (Private Cloud / On-Premises) in einen autonomen Inselbetrieb wechseln können, um auch bei Ausfall des CSP weiterzufunktionieren (SEAL-4)?",
+        "options": [
+          {
+            "label": "Provider-Infrastruktur als Basis akzeptiert",
+            "target": "end-3",
+            "requiresEvaluation": false,
+            "evaluationLabel": "Bewertung: Standard / Native Cloud",
+            "interimResult": "SEAL-0"
+          },
+          {
+            "label": "Eigene physische Infrastruktur (Autarker Betrieb)",
+            "target": "end-4",
+            "requiresEvaluation": true,
+            "evaluationLabel": "Wenn vollständige Infrastruktur-Autonomie gefordert (Sprung auf SEAL-4):",
+            "interimResult": "SEAL-4: Exklusive Kontrolle",
+            "rationale": "Das System kann vollständig offline von der Provider-Zentrale betrieben werden (Inselbetrieb). Höchste Resilienz gegen Supply-Chain-Angriffe und Geopolitik, erfordert massive 24/7 SRE-Eigenkompetenz."
+          }
+        ]
+      }
+    },
+    "results": {
+      "end-0": {
+        "title": "SEAL-0",
+        "level": 0,
+        "referenced_requirements": [
+          "req-ops-noops",
+          "4b86ab44-1d97-49b7-ba19-45604c058d0e",
+          "ac7cbe7a-9127-4c81-92a2-8a33b2615771",
+          "c8c5a75d-238b-4715-ab54-0b24369b2a2f",
+          "6de76991-fef4-445c-ac51-243070ddbdc5"
+        ]
+      },
+      "end-1": {
+        "title": "SEAL-1",
+        "level": 1,
+        "referenced_requirements": [
+          "req-ops-noops",
+          "4b86ab44-1d97-49b7-ba19-45604c058d0e",
+          "ac7cbe7a-9127-4c81-92a2-8a33b2615771",
+          "c8c5a75d-238b-4715-ab54-0b24369b2a2f",
+          "e2751932-2975-4904-8547-7a8c7f512c2b"
+        ]
+      },
+      "end-2": {
+        "title": "SEAL-2",
+        "level": 2,
+        "referenced_requirements": [
+          "req-ops-platform",
+          "dcddc55d-87b3-4d0a-9400-b12693284f67",
+          "9ec72ee5-0888-409b-96ee-031c2b226848",
+          "c8c5a75d-238b-4715-ab54-0b24369b2a2f",
+          "e2751932-2975-4904-8547-7a8c7f512c2b"
+        ]
+      },
+      "end-3": {
+        "title": "SEAL-3",
+        "level": 3,
+        "referenced_requirements": [
+          "req-ops-platform",
+          "c1560071-a9ff-4681-9fd8-740f9d797f5c",
+          "52e71f20-dcda-456e-9ad6-c1a15f90341b",
+          "45be796a-69d3-4069-a33b-800ca3228677",
+          "eaccb027-0258-47bb-baf5-8c1d1fc5efa1"
+        ]
+      },
+      "end-4": {
+        "title": "SEAL-4",
+        "level": 4,
+        "referenced_requirements": [
+          "req-ops-sre",
+          "c1560071-a9ff-4681-9fd8-740f9d797f5c",
+          "52e71f20-dcda-456e-9ad6-c1a15f90341b",
+          "70ccb9b3-e77a-4634-a7c3-aa82174afdd0",
+          "eaccb027-0258-47bb-baf5-8c1d1fc5efa1",
+          "3787d61d-7c3e-40cd-affd-86a71b3cf082",
+          "871bebf7-adb0-4fae-a716-f3626ebe0276"
+        ]
+      }
+    }
+  }
+]
