@@ -19,7 +19,6 @@ export async function apiFetch(endpoint: string | URL | globalThis.Request, opti
       
       // Sonderbehandlung für den aggregierten View
       if (cleanPath === '/api/sovereignty-requirements' || cleanPath.endsWith('/api/sovereignty-requirements')) {
-        console.log(`[Demo-Mode] Intercepted synthetic route: /api/sovereignty-requirements`);
         return Promise.all([
           fetch(`${basePath}/data/requirements.json`).then(r => r.json()),
           fetch(`${basePath}/data/groups.json`).then(r => r.json())
@@ -49,13 +48,11 @@ export async function apiFetch(endpoint: string | URL | globalThis.Request, opti
       let filename = cleanPath.substring(cleanPath.indexOf('/api/') + 5);
       const fileMap: Record<string, string> = {
         'conflicts': 'conflict_matrix.json',
-        'trees': 'decision_trees.json',
-        'category-impacts': 'category_impacts.json'
+        'trees': 'decision_trees.json'
       };
       
       filename = fileMap[filename] || (filename + '.json');
       finalEndpoint = `${basePath}/data/${filename}`;
-      console.log(`[Demo-Mode] Fetching static data from: ${finalEndpoint}`);
     } else {
       console.warn(`[Demo-Mode] Intercepted mutating request to ${urlString}`, options);
       return new Response(JSON.stringify({ 

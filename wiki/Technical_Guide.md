@@ -1,6 +1,6 @@
 # Technical Guide & Architecture
 
-Dieses Dokument richtet sich an Entwickler, AI Agents und Maintainer, die den Decision Navigator erweitern oder modifizieren wollen.
+Dieses Dokument richtet sich an Entwickler, AI Agents und Maintainer, die den Sovereignty Trade-off Navigator erweitern oder modifizieren wollen.
 
 ## Tech Stack & State Management
 
@@ -8,9 +8,9 @@ Das Frontend ist eine React/Next.js-Anwendung (App Router).
 *   **Styling:** TailwindCSS
 *   **State Management:** Zustand (`store/useStore.ts`)
 *   **Persistenz:** Zustand ist mit der `persist` Middleware konfiguriert (LocalStorage), d.h. der Fortschritt eines Nutzers bleibt beim Neuladen der Seite erhalten.
-*   **Datenbasis:** Alle Bäume, Szenarien und Konflikte werden statisch als JSON in `/data` gehalten.
+*   **Datenbasis:** Zur Laufzeit lädt das Frontend alle Bäume, Szenarien und Konflikte über die API aus der SQLite-Datenbank (Fullstack-Modus) bzw. aus den statischen JSON-Exporten unter `/data` (Demo-Modus). Maßgeblich ist die Datenbank – siehe Abschnitt *MCP Server Integration*.
 
-Das Herzstück der Anwendung ist der `useStore.ts`. Hier werden `treeResults`, `scenarioResults` und `selectedRequirements` aggregiert. Helfer-Dateien wie `lib/provenance.ts` lesen diesen State aus, um in den Zusammenfassungen (Step 3, 5, 7) die Herkunft (Provenance) einer Anforderung zu berechnen.
+Zentraler Baustein der Anwendung ist `store/useStore.ts`. Hier werden `treeResults`, `scenarioResults` und `selectedRequirements` aggregiert. Helfer-Dateien wie `lib/provenance.ts` lesen diesen State aus, um in den Zusammenfassungen (Step 3, 5, 7) die Herkunft (Provenance) einer Anforderung zu berechnen.
 
 ## MCP Server Integration (Data Architecture)
 
@@ -45,9 +45,20 @@ Die ehemals monolithische Matrix-Komponente wurde in spezialisierte Subkomponent
 
 *   **`Matrix.tsx`:** Schlanker Einstiegspunkt und Orchestrator (~50 Zeilen).
 *   **`components/matrix-view/ReqMatrix.tsx`:** Anforderung-zu-Anforderung Konfliktmatrix inklusive dynamischem Crosshair-Highlighting, Filterleiste und interaktiver Balkenwaage zur Prioritätengewichtung.
-*   **`components/matrix-view/CategoryHeatmap.tsx`:** Anforderung-zu-Kategorie Heatmap-Darstellung zur aggregierten Wirkungsanalyse.
 *   **`components/matrix-view/AlternativesPanel.tsx`:** Auswahldialog für kollidierende Alternativen innerhalb derselben Dimension/Gruppe.
 *   **`components/matrix-view/TraceItem.tsx`:** Visuelle Provenance-Darstellung (Herleitung aus Entscheidungsbäumen, Szenarien oder manuellen Auflösungen).
-*   **`components/matrix-view/MatrixCell.tsx` & `HeatmapCell.tsx`:** React-memoized Gitterzellen für optimierte Render-Performance.
+*   **`components/matrix-view/MatrixCell.tsx`:** React-memoized Gitterzellen für optimierte Render-Performance.
 
+## Tests
+
+| Befehl | Umfang |
+|---|---|
+| `npm test` | Vitest-Integrationstests (`tests/*.test.ts`, `scripts/__tests__/*.test.ts`): MCP-Server, Daten-Sync, Store, `apiFetch`-Routing, Provenance, Session-Export/Import. Setzt eine geseedete `prisma/dev.db` voraus (`npx prisma db push && npm run db:seed`). |
+| `npm run test:e2e` | Playwright-End-to-End-Tests (`tests/*.spec.ts`) gegen den automatisch gestarteten Dev-Server. Einmalig `npx playwright install chromium` ausführen. |
+
+Die Vitest-Konfiguration schließt `*.spec.ts` bewusst aus, damit die Playwright-Specs nicht im Unit-Test-Lauf landen.
+
+## Konflikt-Status-Normalisierung (`lib/conflict-status.ts`)
+
+Die Evaluations-Prompts geben die Status in Großschreibung vor (`RED`, `ORANGE`, …), während die Matrix-Komponenten case-sensitiv gegen Kleinschreibung vergleichen. Sämtliche Schreibpfade – der Seed-Import (`scripts/sync-import.ts`) und der MCP-Server (`batch_update_conflicts`) – laufen deshalb über `normalizeStatus()`. Neue Schreibpfade müssen dies ebenfalls tun, andernfalls erscheinen die betroffenen Zellen in der Oberfläche fälschlich als unbewertet.
 

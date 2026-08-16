@@ -4,7 +4,6 @@ import { exportScenariosToJson } from '@/lib/sync';
 
 export async function GET() {
   try {
-    console.log('API: GET /api/scenarios triggered');
     const scenarios = await prisma.scenario.findMany({
       include: {
         options: {
@@ -23,7 +22,6 @@ export async function GET() {
       ]
     });
 
-    console.log(`API: Found ${scenarios.length} scenarios in DB`);
 
     // Map to the expected JSON format for the frontend if necessary
     const formatted = scenarios.map(s => ({

@@ -3,6 +3,7 @@ import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import * as fs from 'fs';
 import * as path from 'path';
 import 'dotenv/config';
+import { normalizeStatus } from '../lib/conflict-status';
 
 const url = process.env.DATABASE_URL || 'file:./prisma/dev.db';
 const adapter = new PrismaBetterSqlite3({ url });
@@ -13,7 +14,6 @@ async function main() {
 
   // Clear existing database tables first to sync deletions from JSON
   console.log('Clearing existing tables...');
-  await prisma.categoryImpact.deleteMany({});
   await prisma.conflict.deleteMany({});
   await prisma.scenarioOption.deleteMany({});
   await prisma.scenario.deleteMany({});
@@ -150,7 +150,7 @@ async function main() {
         req1Id_req2Id: { req1Id: id1, req2Id: id2 }
       },
       update: {
-        status: conflict.status,
+        status: normalizeStatus(conflict.status),
         conflictText: conflict.conflict_text || conflict.conflictText,
         bestPractice: conflict.best_practice || conflict.bestPractice,
         isGroundTruth: conflict.is_ground_truth || conflict.isGroundTruth || false,
@@ -158,7 +158,7 @@ async function main() {
       create: {
         req1Id: id1,
         req2Id: id2,
-        status: conflict.status,
+        status: normalizeStatus(conflict.status),
         conflictText: conflict.conflict_text || conflict.conflictText,
         bestPractice: conflict.best_practice || conflict.bestPractice,
         isGroundTruth: conflict.is_ground_truth || conflict.isGroundTruth || false,
@@ -166,25 +166,6 @@ async function main() {
     });
   }
   console.log('Conflicts seeded.');
-
-  // 5.5 Category Impacts
-  const categoryImpactsPath = path.join(process.cwd(), 'data/category_impacts.json');
-  if (fs.existsSync(categoryImpactsPath)) {
-    const impactsData = JSON.parse(fs.readFileSync(categoryImpactsPath, 'utf8'));
-    await prisma.categoryImpact.deleteMany({});
-    for (const impact of impactsData) {
-      await prisma.categoryImpact.create({
-        data: {
-          requirementId: impact.requirement_id,
-          categoryName: impact.category_name,
-          status: impact.status,
-          reasoning: impact.reasoning,
-          isGroundTruth: impact.is_ground_truth || false,
-        },
-      });
-    }
-    console.log('Category Impacts seeded.');
-  }
 
   // 6. Decision Trees
   const treesData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data/decision_trees.json'), 'utf8'));

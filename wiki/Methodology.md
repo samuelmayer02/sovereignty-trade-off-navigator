@@ -1,6 +1,6 @@
 # Methodik & Theoretischer Hintergrund
 
-Der Decision Navigator baut auf dem Prinzip auf, komplexe architektonische Probleme in greifbare, geschäftliche Fragestellungen zu zerlegen. Anstatt zu fragen "Welche Datenbank wollen Sie?", fragt das Tool nach den Prioritäten des Unternehmens. 
+Der Sovereignty Trade-off Navigator baut auf dem Prinzip auf, komplexe architektonische Probleme in greifbare, geschäftliche Fragestellungen zu zerlegen. Anstatt zu fragen "Welche Datenbank wollen Sie?", fragt das Tool nach den Prioritäten des Unternehmens. 
 
 ## Theoretische Architektur-Konflikte
 
@@ -31,7 +31,7 @@ Globale Ausfallsicherheit erfordert oft die tiefe Integration in proprietäre Ha
 Das System trennt strikt zwischen **Problemraum** (Was sind die regulatorischen/geschäftlichen Zwänge?) und **Lösungsraum** (Wie bauen wir es?).
 
 ### 1. Entscheidungsbäume (Das 3D-SEAL-Vektormodell)
-Die Bäume dienen dazu, das grundlegende Souveränitätsziel des Projekts zu definieren. Im Gegensatz zu vereinfachenden Modellen, die Souveränität als eindimensionale Skala betrachten, implementiert der Decision Navigator ein **3D-SEAL-Vektormodell**.
+Die Bäume dienen dazu, das grundlegende Souveränitätsziel des Projekts zu definieren. Im Gegensatz zu vereinfachenden Modellen, die Souveränität als eindimensionale Skala betrachten, implementiert der Sovereignty Trade-off Navigator ein **3D-SEAL-Vektormodell**.
 Souveränität wird strikt in drei orthogonale Dimensionen (Vektoren) unterteilt, da rechtliche Unabhängigkeit (z.B. von US-Behörden) nicht zwangsläufig technologische Unabhängigkeit (z.B. von Hersteller-APIs) bedeutet:
 
 *   **SEAL-J (Jurisdiktionelle & Daten-Souveränität):** Bewertet die rechtliche Bindung, physische Datenresidenz, kryptografische Autarkie (SSE-KMS / BYOK / HYOK) und die Provider-Nationalität.
@@ -49,8 +49,8 @@ Szenarien überführen komplexe Architekturmuster in verständliche, geschäftli
 
 ## Operationalisierung des EU Cloud Sovereignty Frameworks
 
-Der Decision Navigator und das 3D-SEAL-Vektormodell basieren direkt auf dem **Cloud Sovereignty Framework (Version 1.2.1 – Oct. 2025) der EU-Kommission**. 
-Das Framework definiert 8 Souveränitäts-Ziele (Sovereignty Objectives, SOV-1 bis SOV-8). Der Decision Navigator mappt diese strukturiert auf seine drei Entscheidungsbäume:
+Der Sovereignty Trade-off Navigator und das 3D-SEAL-Vektormodell basieren direkt auf dem **Cloud Sovereignty Framework (Version 1.2.1 – Oct. 2025) der EU-Kommission**. 
+Das Framework definiert 8 Souveränitäts-Ziele (Sovereignty Objectives, SOV-1 bis SOV-8). Der Sovereignty Trade-off Navigator mappt diese strukturiert auf seine drei Entscheidungsbäume:
 
 1.  **Baum 1: Jurisdiktionelle & Daten-Souveränität (SEAL-J)**
     *   *SOV-1: Strategic Sovereignty* (z.B. Provider-Nationalität, Eigentümerschaft)

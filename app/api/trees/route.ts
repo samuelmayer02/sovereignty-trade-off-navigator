@@ -4,9 +4,7 @@ import { exportTreesToJson } from '@/lib/sync';
 
 export async function GET() {
   try {
-    console.log('API: GET /api/trees triggered');
     const trees = await prisma.decisionTree.findMany();
-    console.log(`API: Found ${trees.length} trees in DB`);
     const formatted = trees.map(t => JSON.parse(t.data));
     return NextResponse.json(formatted);
   } catch (error) {

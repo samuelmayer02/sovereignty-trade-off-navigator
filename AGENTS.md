@@ -28,6 +28,11 @@ The project has migrated from pure JSON files to a relational database using **P
 7.  **Documentation**: When changing workflows or data structures, always check if the `README.md` needs an update to stay consistent for human operators.
 8.  **Wiki Documentation**: For all relevant changes (functional, technical, architectural, or design changes), you MUST ensure that the corresponding documentation files in the `wiki/` directory and `README.md` are updated immediately to reflect the changes. Agents should NEVER skip this step. This ensures architectural integrity and knowledge retention.
 9.  **Dual-Mode Architecture (Static vs Production)**: The app can run as a Next.js Static Export for GitHub pages or a Fullstack app with SQLite. Always use `apiFetch` from `@/lib/api-client` instead of native `fetch` when communicating with `/api/...` endpoints. This ensures requests are properly routed to static JSON files when `NEXT_PUBLIC_STATIC_EXPORT=true` is set.
+10. **Conflict Status Normalization**: The evaluation prompts emit uppercase statuses (`RED`, `ORANGE`, ...), but the matrix components compare case-sensitively against lowercase. Every write path must run the value through `normalizeStatus()` from `@/lib/conflict-status`.
+11. **Generated Artifacts**: `prisma/dev.db` and `public/data/` are generated and not tracked in Git. Rebuild them with `npx prisma db push && npm run db:seed` and `npm run build:static` respectively — never commit them.
 
 ### Next.js API Routes:
 All data-fetching routes in `app/api/` now use Prisma. They automatically trigger a JSON export on every write operation.
+
+### Naming:
+The project is called **Sovereignty Trade-off Navigator** (package name `sovereignty-trade-off-navigator`, MCP server name `sovereignty-navigator-server`). Earlier working titles such as "Master Matrix" or "Decision Navigator" must not be reintroduced.

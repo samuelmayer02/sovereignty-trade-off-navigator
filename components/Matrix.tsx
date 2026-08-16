@@ -1,9 +1,9 @@
 import React from 'react';
 import { useStore } from '@/store/useStore';
 import { cn } from '@/lib/utils';
-import { ReqMatrix, CategoryHeatmap } from './matrix-view';
+import { ReqMatrix } from './matrix-view';
 
-export { ReqMatrix, CategoryHeatmap };
+export { ReqMatrix };
 export * from './matrix-view';
 
 export default function Matrix({ 

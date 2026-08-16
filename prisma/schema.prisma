@@ -8,12 +8,11 @@ datasource db {
 }
 
 model Category {
-  name            String           @id
-  prefix          String
-  uid             String?          @unique
-  goal            String?
-  categoryImpacts CategoryImpact[]
-  groups          Group[]
+  name   String  @id
+  prefix String
+  uid    String? @unique
+  goal   String?
+  groups Group[]
 }
 
 model Group {
@@ -33,7 +32,6 @@ model Requirement {
   groupId         String?
   flagged         Boolean          @default(false)
   flagComment     String?
-  categoryImpacts CategoryImpact[]
   conflicts1      Conflict[]       @relation("req1")
   conflicts2      Conflict[]       @relation("req2")
   group           Group?           @relation(fields: [groupId], references: [id])
@@ -75,19 +73,6 @@ model Conflict {
   req2          Requirement @relation("req2", fields: [req2Id], references: [uid], onDelete: Cascade)
 
   @@unique([req1Id, req2Id])
-}
-
-model CategoryImpact {
-  id            Int         @id @default(autoincrement())
-  requirementId String
-  categoryName  String
-  status        String
-  reasoning     String
-  isGroundTruth Boolean     @default(false)
-  category      Category    @relation(fields: [categoryName], references: [name], onDelete: Cascade)
-  requirement   Requirement @relation(fields: [requirementId], references: [uid], onDelete: Cascade)
-
-  @@unique([requirementId, categoryName])
 }
 
 model DecisionTree {

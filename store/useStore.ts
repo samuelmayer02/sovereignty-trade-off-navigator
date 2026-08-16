@@ -101,7 +101,6 @@ interface State {
   decisionTrees: any[];
   scenarios: any[];
   conflicts: any[];
-  categoryImpacts: any[];
   fetchInitialData: () => Promise<void>;
 
   sessionId: string;
@@ -163,7 +162,6 @@ interface State {
   forceSwapRequirement: (oldUid: string, newUid: string, context?: 'step6' | 'matrix') => void;
   forceToggleRequirement: (uid: string, context?: 'step6' | 'matrix') => void;
   updateConflict: (req1Id: string, req2Id: string, data: any) => Promise<void>;
-  updateCategoryImpact: (requirementId: string, categoryName: string, data: any) => Promise<void>;
   hasSeenTreeTutorial: boolean;
   setHasSeenTreeTutorial: (value: boolean) => void;
   hasSeenScenarioTutorial: boolean;
@@ -179,17 +177,13 @@ export const useStore = create<State>()(
       decisionTrees: [],
       scenarios: [],
       conflicts: [],
-      categoryImpacts: [],
       fetchInitialData: async () => {
-        console.log('Store: fetchInitialData triggered');
-
         const load = async (url: string, field: keyof State) => {
           try {
             const res = await apiFetch(url);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             if (Array.isArray(data)) {
-              console.log(`Store: Loaded ${data.length} items for ${field}`);
               set((state) => ({ ...state, [field]: data }));
             }
           } catch (e) {
@@ -204,9 +198,6 @@ export const useStore = create<State>()(
         await load('/api/trees', 'decisionTrees');
         await load('/api/scenarios', 'scenarios');
         await load('/api/conflicts', 'conflicts');
-        await load('/api/category-impacts', 'categoryImpacts');
-
-        console.log('Store: fetchInitialData sequence finished');
       },
       updateConflict: async (req1Id: string, req2Id: string, data: any) => {
         try {
@@ -228,27 +219,6 @@ export const useStore = create<State>()(
           console.error('Failed to update conflict', e);
         }
       },
-      updateCategoryImpact: async (requirementId: string, categoryName: string, data: any) => {
-        try {
-          const res = await apiFetch(`/api/category-impacts/${requirementId}/${categoryName}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-          });
-          if (res.ok) {
-            set((state) => ({
-              categoryImpacts: state.categoryImpacts.map((i: any) => 
-                i.requirement_id === requirementId && i.category_name === categoryName
-                  ? { ...i, ...data, is_ground_truth: data.is_ground_truth } 
-                  : i
-              )
-            }));
-          }
-        } catch (e) {
-          console.error('Failed to update category impact', e);
-        }
-      },
-
       sessionId: '',
       setSessionId: (sessionId) => set({ sessionId }),
       sealProfile: { J: 0, T: 0, O: 0 },
@@ -748,7 +718,6 @@ export const useStore = create<State>()(
           decisionTrees: _decisionTrees,
           scenarios: _scenarios,
           conflicts: _conflicts,
-          categoryImpacts: _categoryImpacts,
           ...rest
         } = state;
         return rest;
