@@ -7,7 +7,6 @@ export function DataLoader() {
   const fetchInitialData = useStore((state) => state.fetchInitialData);
 
   useEffect(() => {
-    console.log('DataLoader: Mounting and triggering fetchInitialData');
     fetchInitialData();
   }, [fetchInitialData]);
 

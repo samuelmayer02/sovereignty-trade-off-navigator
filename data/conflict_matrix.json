@@ -4704,7 +4704,7 @@
       "1bb63b64-7082-43b7-8552-9bab772d4de3",
       "a3dc38fe-72ea-4760-920c-93e469ae2b30"
     ],
-    "status": "ORANGE",
+    "status": "orange",
     "conflict_text": "**Analyse:** Req A beschränkt Schreiboperationen auf einen Knoten, während Req B globale, lineare Lesekonsistenz verlangt.\n**Reibungspunkte:** Um lineare Konsistenz bei einer verteilten Replica-Architektur zu gewährleisten, muss synchrone Replikation erzwungen werden, was die Latenz signifikant erhöht.\n**Fazit:** Gemäß TC-5 (Konsens & Split-Brain) entsteht ein klassischer Latenz-Trade-off, da synchrone Bestätigungen abgewartet werden müssen. Status ist ORANGE.",
     "best_practice": "Nutzung von synchroner Replikation für kritische Transaktionen, eventuell kombiniert mit Quorum-Reads, um Leselatenzen auszubalancieren.",
     "is_ground_truth": false
@@ -4794,7 +4794,7 @@
       "1bb63b64-7082-43b7-8552-9bab772d4de3",
       "be99fa18-a142-4412-b9b8-a706a9799145"
     ],
-    "status": "BLUE",
+    "status": "blue",
     "conflict_text": "**Analyse:** Req A betrifft das Datenbank-Replikationsmuster, während Req B strikte Open-Source-Prinzipien ohne proprietäre Software vorgibt.\n**Reibungspunkte:** Entfällt.\n**Fazit:** Der Aufbau einer Primary-Replica-Architektur ist vollständig mit bewährten Open-Source-Datenbanken wie PostgreSQL realisierbar. Status ist BLUE.",
     "best_practice": "N/A - Kein architektonischer Konflikt",
     "is_ground_truth": false
@@ -4824,7 +4824,7 @@
       "1bb63b64-7082-43b7-8552-9bab772d4de3",
       "c976297d-59aa-4d2c-8470-682080e30bed"
     ],
-    "status": "RED",
+    "status": "red",
     "conflict_text": "**Analyse:** Req A beschränkt Schreiboperationen absichtlich auf einen Knoten (Primary-Replica). Req B fordert maximale Skalierbarkeit durch verteilte, proprietäre Services wie DynamoDB.\n**Reibungspunkte:** Die inhärente Limitierung der Schreibkapazität eines einzelnen Primary-Knotens widerspricht dem in Req B geforderten Paradigma der unbegrenzten horizontalen Skalierbarkeit verteilter Managed Services.\n**Fazit:** Nach TC-1 (Abstraktionsgrad & Kontrolle) und den Prinzipien verteilter Systeme kollidieren das zentralisierte Schreib-Bottleneck und die geforderte Hyperskalierung zwingend. Status ist RED.",
     "best_practice": "Einsatz von CQRS (Command Query Responsibility Segregation), um Lesezugriffe über Managed Services global zu skalieren, während der schreibende State kontrolliert verwaltet wird.",
     "is_ground_truth": false
@@ -4864,7 +4864,7 @@
       "1bb63b64-7082-43b7-8552-9bab772d4de3",
       "d214275a-9196-4e73-a656-5148ab24c831"
     ],
-    "status": "BLUE",
+    "status": "blue",
     "conflict_text": "**Analyse:** Req A beschreibt ein Datenbankschema zur Konsistenzsicherung. Req B stellt strikte juristische Vorgaben zur Datenhoheit.\n**Reibungspunkte:** Entfällt.\n**Fazit:** Architekturmuster der Datenhaltung sind orthogonal zu den rechtlichen und geografischen Einschränkungen der Serverstandorte. Status ist BLUE.",
     "best_practice": "N/A - Kein architektonischer Konflikt",
     "is_ground_truth": false

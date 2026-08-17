@@ -101,18 +101,6 @@ export async function exportTreesToJson() {
   fs.writeFileSync(path.join(DATA_DIR, 'decision_trees.json'), JSON.stringify(data, null, 2), 'utf8');
 }
 
-export async function exportCategoryImpactsToJson() {
-  const impacts = await prisma.categoryImpact.findMany();
-  const data = impacts.map(i => ({
-    requirement_id: i.requirementId,
-    category_name: i.categoryName,
-    status: i.status,
-    reasoning: i.reasoning,
-    is_ground_truth: i.isGroundTruth
-  }));
-  fs.writeFileSync(path.join(DATA_DIR, 'category_impacts.json'), JSON.stringify(data, null, 2), 'utf8');
-}
-
 export async function exportAllToJson() {
   await Promise.all([
     exportRequirementsToJson(),
@@ -120,7 +108,6 @@ export async function exportAllToJson() {
     exportGroupsToJson(),
     exportScenariosToJson(),
     exportConflictsToJson(),
-    exportCategoryImpactsToJson(),
     exportTreesToJson()
   ]);
 }

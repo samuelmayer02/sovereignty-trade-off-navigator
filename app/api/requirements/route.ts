@@ -5,7 +5,6 @@ import nodeCrypto from 'crypto';
 
 export async function GET() {
   try {
-    console.log('API: GET /api/requirements triggered');
 
     // Dynamically migrate SQLite database schema if columns are missing
     try {
@@ -52,7 +51,6 @@ export async function GET() {
       orderBy: { uid: 'asc' }
     });
 
-    console.log(`API: Found ${requirements.length} requirements in DB`);
     // Map database field names to frontend expectations
     const formatted = requirements.map(r => ({
       uid: r.uid,

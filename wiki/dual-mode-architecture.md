@@ -1,12 +1,17 @@
 # Dual-Mode Architecture
 
-The Master Matrix application is designed to run in two distinct environments:
+The Sovereignty Trade-off Navigator is designed to run in two distinct environments:
 1. **Production Mode (Fullstack)**: Uses Next.js API routes with a SQLite database via Prisma.
 2. **Demo Mode (Static Export)**: A purely client-side static build for GitHub Pages, using JSON files as a read-only database and `localStorage` for state.
 
 ## How it works
 
-The modes are toggled via the `NEXT_PUBLIC_STATIC_EXPORT` environment variable.
+Two environment variables are set together by `scripts/build-static.sh`:
+
+- `STATIC_EXPORT=true` switches `next.config.ts` to `output: 'export'` (build time, server side).
+- `NEXT_PUBLIC_STATIC_EXPORT=true` is inlined into the client bundle and makes `apiFetch` resolve to static JSON instead of `/api/...` (runtime, client side).
+
+Both must be set for a working demo build; running `npm run build:static` handles this.
 
 ### 1. API Routing & Interception (`lib/api-client.ts`)
 We use a central utility `apiFetch` which acts as a drop-in replacement for the native `fetch`. 
@@ -15,7 +20,7 @@ We use a central utility `apiFetch` which acts as a drop-in replacement for the 
 - **In Demo Mode:** 
   - **Query-String & Slash Normalization:** URLs like `/api/conflicts?context=sovereignty` or `/api/requirements/` are cleaned so file mappings resolve correctly to `/data/conflict_matrix.json` and `/data/requirements.json`.
   - **Synthetic Joins:** Aggregate routes (such as `/api/sovereignty-requirements`) perform a client-side join between `requirements.json` and `groups.json` to maintain data parity with backend SQL joins.
-  - **Base Path Support:** Prepends `NEXT_PUBLIC_BASE_PATH` (e.g. `/master-matrix/data/...json`) for sub-path GitHub Pages deployments.
+  - **Base Path Support:** Prepends `NEXT_PUBLIC_BASE_PATH` (e.g. `/sovereignty-trade-off-navigator/data/...json`) for sub-path GitHub Pages deployments.
   - **Mutating Requests (`POST`, `PUT`, `DELETE`):** Intercepted, returning `{ success: true, demoMode: true, message: "..." }` with status 200 to allow in-memory optimistic updates without throwing runtime exceptions.
 
 ### 2. State Management & UI Feedback (`components/StaticModeBanner.tsx`, `components/EditorNav.tsx`)
@@ -30,7 +35,7 @@ Users can use the `SessionManager` component to export their local state to a JS
 
 ### 3. Build & Self-Healing Process (`scripts/build-static.sh`)
 Next.js App Router does not permit dynamic server API routes (`app/api/**`) during `output: 'export'`. To support both fullstack and static exports seamlessly:
-- `scripts/build-static.sh` prepares static data in `public/data/` from `data/*.json`.
+- `scripts/build-static.sh` prepares static data in `public/data/` from `data/*.json`. This directory is generated and therefore not tracked in Git.
 - Temporarily moves `app/api` to `.app_api_tmp` during `next build`.
 - **Fault-Tolerant Traps:** A multi-signal trap (`trap cleanup EXIT INT TERM HUP`) restores `app/api` automatically, even if the build is cancelled or fails.
 - **Self-Healing Startup Check:** At the start of `build-static.sh` and via `npm run predev`, any stranded `.app_api_tmp` directory is automatically detected and restored to `app/api`.

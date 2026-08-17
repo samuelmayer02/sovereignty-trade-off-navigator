@@ -1,31 +1,34 @@
-# Willkommen beim Decision Navigator Wiki
+# Willkommen beim Sovereignty Trade-off Navigator Wiki
 
-Der **Decision Navigator** ist ein interaktives Architekturbewertungs-Tool, das komplexe, oft widersprüchliche Anforderungen im Kontext von Cloud-Souveränität, Architektur-Entscheidungen und geschäftlichen Zielen modelliert und transparent macht.
+Der **Sovereignty Trade-off Navigator** ist ein softwaregestütztes Werkzeug, das den systemischen Zielkonflikt zwischen digitaler Souveränität (Vermeidung von Vendor-Lock-in) und IT-Betriebsaspekten wie Ausfallsicherheit und operativer Komplexität adressiert. Er übersetzt abstrakte strategische Autonomieanforderungen in konkrete architektonische Design-Optionen und visualisiert die daraus resultierenden Konsequenzen für Systemstabilität und Betriebsaufwand. Dadurch werden implizite Annahmen und „Return on Lock-in“-Abwägungen bei der Konzeption verteilter Cloud-Infrastrukturen systematisch bewertbar und nachvollziehbar. Das Artefakt fungiert als kommunikative Brücke, die strategische Entscheidungen des Produktmanagements mit der technischen Umsetzung in der IT-Architektur in Einklang bringt.
 
-## Zielgruppe, Kernproblem und Mehrwert
+## Problemstellung, Zielgruppe und Ergebnis
 
-### Das Kernproblem: Das Souveränitäts-Hochverfügbarkeits-Paradoxon
-IT-Entscheider und Cloud-Architekten, insbesondere in stark regulierten Branchen (wie KRITIS, Energie, Finanzen), stehen zunehmend zwischen zwei Stühlen: Einerseits fordert das Management oder der Gesetzgeber (z. B. NIS-2, BSI C5) maximale Unabhängigkeit (Digitale Souveränität) und Schutz vor extraterritorialen Zugriffen. Andererseits verlangen dieselben Stakeholder eine maximale Ausfallsicherheit (Resilienz) mit Recovery Time Objectives (RTO) nahe Null. In der physikalischen Cloud-Realität (CAP/PACELC-Theorem) schließen sich diese Extreme jedoch gegenseitig aus oder führen zu einer explodierenden operativen Komplexität im Eigenbetrieb. Der Decision Navigator macht diesen "Wicked Problem"-Zielkonflikt objektivierbar, messbar und kommunizierbar.
+### Problemstellung
+Regulatorik und Unternehmensstrategie fordern Unabhängigkeit von einzelnen Anbietern und Jurisdiktionen (etwa im Kontext von NIS-2 oder BSI C5), während Verfügbarkeits- und Betriebsziele für den Bezug integrierter, anbieterspezifischer Dienste sprechen. Verteilte Systeme unterliegen dabei physikalischen und theoretischen Grenzen (CAP/PACELC), sodass sich beide Zielrichtungen nicht gleichzeitig maximieren lassen. Häufig bleibt diese Abwägung implizit und wird erst im Betrieb sichtbar. Der Navigator führt sie in eine explizite, dokumentierte Form über.
 
 ### Zielgruppe und Einsatzszenarien
-Das Tool liefert auf zwei Ebenen den entscheidenden Mehrwert:
+Das Werkzeug adressiert zwei Anwendungsebenen:
 
-1.  **Strategische Ebene (Management & C-Level, Enterprise Architekten):** Bei der Erarbeitung oder Validierung einer unternehmensweiten Cloud-Strategie. Das Tool fungiert als Kommunikationsbrücke, die dem Management schmerzhaft, aber transparent aufzeigt, was der Wunsch nach "100% Cloud-Agnostizität" für die Ausfallsicherheit und die Kosten bedeutet. Es schafft ein "Shared Understanding".
-2.  **System Ebene (IT- & Lösungsarchitekten):** In der Architektur-Design- und Planungsphase *vor* der eigentlichen Cloud-Migration von spezifischen, hochkritischen ("Mission-Critical") Anwendungen. Es hilft, konkrete und technisch vertretbare Kompromisse zu finden.
+1.  **Strategische Ebene (Produktmanagement, Leitungsebene, Enterprise-Architektur):** Erarbeitung oder Validierung einer unternehmensweiten Cloud-Strategie. Der Navigator dient als Kommunikationsinstrument, das die Konsequenzen strategischer Autonomieziele für Ausfallsicherheit und Betriebsaufwand nachvollziehbar darstellt und ein gemeinsames Verständnis zwischen Fach- und Technikseite herstellt.
+2.  **Systemebene (IT- und Lösungsarchitektur):** Architekturentwurf und Planung vor der Migration geschäftskritischer Anwendungen, mit dem Ziel eines technisch vertretbaren und begründeten Kompromisses.
 
-### Das Deliverable
-Das konkrete Endergebnis einer Session im Decision Navigator ist ein fundierter, exportierbarer Report (Architektur-Entscheidungsdokument / Architecture Decision Record - ADR). Dieser dokumentiert die getroffenen Kompromisse, die identifizierten Konflikte und vor allem die "Accepted Risks" (Akzeptierten Risiken) messbar. Er dient als belastbare Argumentationsgrundlage und Nachweis gegenüber Management, Security-Beauftragten und Auditoren.
+### Ergebnis
+Ergebnis einer Sitzung ist ein exportierbares Architekturentscheidungsdokument (Architecture Decision Record, ADR). Es dokumentiert die getroffenen Kompromisse, die identifizierten Konflikte sowie die explizit akzeptierten Risiken und dient als Argumentationsgrundlage und Nachweis gegenüber Leitungsebene, Sicherheitsverantwortlichen und Auditoren.
 
 ## Inhaltsverzeichnis
 
-Um das Tool vollständig zu verstehen, empfehlen wir, die Dokumentation in der folgenden Reihenfolge zu lesen:
+Zum vollständigen Verständnis empfiehlt sich die folgende Lesereihenfolge:
 
-1.  **[Methodik & Theoretischer Hintergrund](Methodology):** Warum das Tool existiert. Erklärt die Kernkonflikte (z.B. CAP, PACELC, Shared Responsibility), warum wir mit Bäumen und Szenarien arbeiten und wie das Cloud Sovereignty Framework operationalisiert wurde.
-2.  **[User Guide & User Flow](User_Guide):** Eine Schritt-für-Schritt-Anleitung durch das Frontend. Wie werden Entscheidungen getroffen? Wie funktioniert die Konfliktauflösung in der UI? Wie liest man das Risiko-Register und die Trade-off-Matrix?
-3.  **[System-Mechaniken (Interne Logik)](System_Mechanics):** Ein Blick unter die Haube. Wie berechnet sich die Priorität von Anforderungen dynamisch aus Business Value und Risk? Wie blockt das System ungelöste Konflikte? Wie funktionieren die Exklusiv-Gruppen?
-4.  **[Technical Guide & Architektur](Technical_Guide):** Für Entwickler und Administratoren. Beschreibt das Tech-Stack, das Zustand-State-Management, die Integration des Model Context Protocols (MCP) und zukünftige "AI Best Guess"-Features.
-5.  **[Editors Guide](Editors_Guide):** Anleitung zur Pflege der JSON-Datenbasis. Wie fügt man neue Anforderungen, Bäume oder Szenarien hinzu, ohne das System zu zerstören?
+1.  **[Methodik und theoretischer Hintergrund](Methodology.md):** Theoretische Fundierung des Werkzeugs. Erläutert die zugrundeliegenden Architekturkonflikte (CAP, PACELC, Shared Responsibility), die Begründung für Entscheidungsbäume und Szenarien sowie die Operationalisierung des Cloud Sovereignty Framework.
+2.  **[User Guide](User_Guide.md):** Schrittweise Anleitung durch die Oberfläche: Entscheidungsfindung, Konfliktauflösung, Interpretation von Risikoregister und Trade-off-Matrix.
+3.  **[System-Mechaniken](System_Mechanics.md):** Interne Logik. Berechnung der Anforderungspriorität aus Business Value und Technical Risk, Blockierlogik bei ungelösten Konflikten sowie Funktionsweise der Exklusiv-Gruppen.
+4.  **[Technical Guide](Technical_Guide.md):** Für Entwicklung und Administration. Technologiestack, State-Management, Anbindung des Model Context Protocol (MCP) und Teststrategie.
+5.  **[Editors Guide](Editors_Guide.md):** Pflege der Datenbasis. Anlage neuer Anforderungen, Entscheidungsbäume und Szenarien unter Wahrung der Datenkonsistenz.
+6.  **[Dual-Mode Architecture](dual-mode-architecture.md):** Betrieb als Fullstack-Anwendung mit SQLite sowie als rein statische GitHub-Pages-Demonstration.
+
+Installation, Betrieb und Erweiterung der Konfliktmatrix sind im [README des Repositories](https://github.com/samuelmayer02/sovereignty-trade-off-navigator#readme) beschrieben.
 
 ---
 
-*Nutzen Sie die Seitenleiste, um durch das Wiki zu navigieren.*
+*Die Navigation erfolgt über die Seitenleiste.*

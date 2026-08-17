@@ -66,9 +66,6 @@ describe('lib/api-client - apiFetch', () => {
 
     await apiFetch('/api/trees');
     expect(mockFetch).toHaveBeenCalledWith('/data/decision_trees.json');
-
-    await apiFetch('/api/category-impacts');
-    expect(mockFetch).toHaveBeenCalledWith('/data/category_impacts.json');
   });
 
   it('Static Mode: strips query parameters and trailing slashes from URLs', async () => {
@@ -88,17 +85,17 @@ describe('lib/api-client - apiFetch', () => {
 
   it('Static Mode: respects NEXT_PUBLIC_BASE_PATH for GitHub Pages hosting', async () => {
     process.env.NEXT_PUBLIC_STATIC_EXPORT = 'true';
-    process.env.NEXT_PUBLIC_BASE_PATH = '/master-matrix';
+    process.env.NEXT_PUBLIC_BASE_PATH = '/sovereignty-trade-off-navigator';
     const mockFetch = vi.fn().mockResolvedValue(new Response(JSON.stringify([]), { status: 200 }));
     global.fetch = mockFetch;
 
     const { apiFetch } = await import('../lib/api-client');
 
     await apiFetch('/api/requirements');
-    expect(mockFetch).toHaveBeenCalledWith('/master-matrix/data/requirements.json');
+    expect(mockFetch).toHaveBeenCalledWith('/sovereignty-trade-off-navigator/data/requirements.json');
 
     await apiFetch('/api/conflicts');
-    expect(mockFetch).toHaveBeenCalledWith('/master-matrix/data/conflict_matrix.json');
+    expect(mockFetch).toHaveBeenCalledWith('/sovereignty-trade-off-navigator/data/conflict_matrix.json');
   });
 
   it('Static Mode: performs synthetic client-side join on /api/sovereignty-requirements', async () => {

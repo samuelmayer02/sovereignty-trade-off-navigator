@@ -15,7 +15,6 @@ describe('useStore Dual-Mode Baseline', () => {
       decisionTrees: [],
       scenarios: [],
       conflicts: [],
-      categoryImpacts: [],
     });
   });
 
@@ -29,15 +28,14 @@ describe('useStore Dual-Mode Baseline', () => {
     const store = useStore.getState();
     await store.fetchInitialData();
 
-    // Verify fetch was called 7 times with /api/ endpoints
-    expect(mockFetch).toHaveBeenCalledTimes(7);
+    // Verify fetch was called 6 times with /api/ endpoints
+    expect(mockFetch).toHaveBeenCalledTimes(6);
     expect(mockFetch).toHaveBeenCalledWith('/api/requirements');
     expect(mockFetch).toHaveBeenCalledWith('/api/groups');
     expect(mockFetch).toHaveBeenCalledWith('/api/categories');
     expect(mockFetch).toHaveBeenCalledWith('/api/trees');
     expect(mockFetch).toHaveBeenCalledWith('/api/scenarios');
     expect(mockFetch).toHaveBeenCalledWith('/api/conflicts');
-    expect(mockFetch).toHaveBeenCalledWith('/api/category-impacts');
 
     const state = useStore.getState();
     expect(state.requirements.length).toBe(1);

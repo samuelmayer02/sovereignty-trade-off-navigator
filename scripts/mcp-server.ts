@@ -6,7 +6,8 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { PrismaClient } from "@prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import { exportAllToJson, exportConflictsToJson, exportCategoryImpactsToJson } from "../lib/sync";
+import { exportAllToJson, exportConflictsToJson } from "../lib/sync";
+import { normalizeStatus } from "../lib/conflict-status";
 import * as dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -36,7 +37,7 @@ const prisma = new PrismaClient({ adapter });
 
 const server = new Server(
   {
-    name: "master-matrix-server",
+    name: "sovereignty-navigator-server",
     version: "0.2.1",
   },
   {
@@ -87,39 +88,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
           },
           required: ["conflicts"],
-        },
-      },
-      {
-        name: "get_unrated_category_impacts",
-        description: "Find pairs of requirement and category that haven't been evaluated for impact yet.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            limit: { type: "number", default: 20, description: "Max number of pairs to return" },
-          },
-        },
-      },
-      {
-        name: "batch_update_category_impacts",
-        description: "Update multiple category impacts at once.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            impacts: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  requirementId: { type: "string" },
-                  categoryName: { type: "string" },
-                  status: { type: "string", enum: ["red", "orange", "green", "gray"] },
-                  reasoning: { type: "string" },
-                },
-                required: ["requirementId", "categoryName", "status", "reasoning"],
-              },
-            },
-          },
-          required: ["impacts"],
         },
       },
       {
@@ -279,14 +247,14 @@ export async function handleToolCall(name: string, args: any) {
               req1Id_req2Id: { req1Id: id1, req2Id: id2 }
             },
             update: {
-              status: conflict.status,
+              status: normalizeStatus(conflict.status),
               conflictText: conflict.conflictText,
               bestPractice: conflict.bestPractice
             },
             create: {
               req1Id: id1,
               req2Id: id2,
-              status: conflict.status,
+              status: normalizeStatus(conflict.status),
               conflictText: conflict.conflictText,
               bestPractice: conflict.bestPractice
             }
@@ -295,76 +263,6 @@ export async function handleToolCall(name: string, args: any) {
         
         await exportConflictsToJson();
         return { content: [{ type: "text", text: `Successfully updated ${conflicts.length} conflicts.` }] };
-      }
-
-      case "get_unrated_category_impacts": {
-        const { limit = 20 } = args as any;
-        
-        const reqs = await prisma.requirement.findMany({
-          select: {
-            uid: true,
-            name: true,
-            description: true,
-          }
-        });
-
-        const categories = await prisma.category.findMany({
-          select: { name: true }
-        });
-
-        const existing = await prisma.categoryImpact.findMany({
-          select: { requirementId: true, categoryName: true }
-        });
-        const existingSet = new Set(existing.map(i => `${i.requirementId}:${i.categoryName}`));
-
-        const unratedPairs = [];
-        for (const req of reqs) {
-          for (const cat of categories) {
-            if (!existingSet.has(`${req.uid}:${cat.name}`)) {
-              unratedPairs.push({
-                requirement: req,
-                category: cat
-              });
-              if (unratedPairs.length >= limit) break;
-            }
-          }
-          if (unratedPairs.length >= limit) break;
-        }
-
-        return {
-          content: [{ 
-            type: "text", 
-            text: `Found ${unratedPairs.length} unrated requirement-category pairs. Please evaluate them.\n\n` + JSON.stringify(unratedPairs, null, 2) 
-          }]
-        };
-      }
-
-      case "batch_update_category_impacts": {
-        const { impacts } = args as any;
-        
-        for (const impact of impacts) {
-          await prisma.categoryImpact.upsert({
-            where: {
-              requirementId_categoryName: { 
-                requirementId: impact.requirementId, 
-                categoryName: impact.categoryName 
-              }
-            },
-            update: {
-              status: impact.status,
-              reasoning: impact.reasoning
-            },
-            create: {
-              requirementId: impact.requirementId,
-              categoryName: impact.categoryName,
-              status: impact.status,
-              reasoning: impact.reasoning
-            }
-          });
-        }
-        
-        await exportCategoryImpactsToJson();
-        return { content: [{ type: "text", text: `Successfully updated ${impacts.length} category impacts.` }] };
       }
 
       case "get_conflicts_by_context": {
@@ -487,7 +385,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Master Matrix MCP Server running");
+  console.error("Sovereignty Trade-off Navigator MCP Server running");
 }
 
 main().catch((error) => {

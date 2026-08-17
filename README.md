@@ -1,316 +1,237 @@
-# Sovereignty Architecture Decision Navigator
+# Sovereignty Trade-off Navigator
 
-Der **Sovereignty Architecture Decision Navigator** ist ein interaktives Expertensystem, das IT-Entscheidern und Cloud-Architekten hilft, komplexe Architektur-Entscheidungen im Kontext von Cloud-Souveränität und Ausfallsicherheit zu treffen. 
+Der **Sovereignty Trade-off Navigator** ist ein softwaregestütztes Werkzeug, das den systemischen Zielkonflikt zwischen digitaler Souveränität (Vermeidung von Vendor-Lock-in) und IT-Betriebsaspekten wie Ausfallsicherheit und operativer Komplexität adressiert. Das Tool übersetzt abstrakte strategische Autonomieanforderungen in konkrete architektonische Design-Optionen und visualisiert die daraus resultierenden Konsequenzen für Systemstabilität und Betriebsaufwand. Dadurch werden implizite Annahmen und „Return on Lock-in“-Abwägungen bei der Konzeption verteilter Cloud-Infrastrukturen systematisch bewertbar und nachvollziehbar. Das Artefakt fungiert als kommunikative Brücke, die strategische Entscheidungen des Produktmanagements mit der technischen Umsetzung in der IT-Architektur in Einklang bringt.
 
----
+Dieses Repository ist der Software-Anhang zur zugehörigen Masterarbeit.
 
-## 🎯 Das Kernproblem: Das Souveränitäts-Hochverfügbarkeits-Paradoxon
-IT-Entscheider, insbesondere in stark regulierten Branchen (wie KRITIS, Energie, Finanzen), stehen zunehmend unter Druck: Gesetzgeber (z. B. NIS-2, BSI) und Management fordern **maximale Unabhängigkeit (Souveränität)** UND **maximale Ausfallsicherheit (Resilienz)**. In der physikalischen Cloud-Realität (CAP/PACELC-Theorem) schließen sich diese Anforderungen jedoch gegenseitig aus oder führen zu enormer operativer Komplexität im Eigenbetrieb. Das Tool macht diesen "Wicked Problem"-Zielkonflikt objektivierbar, messbar und gegenüber Stakeholdern kommunizierbar.
-
-## 👥 Zielgruppe & Use Cases
-Das Tool liefert den entscheidenden Mehrwert auf zwei Ebenen:
-1. **Strategische Ebene:** Für Enterprise Architekten und C-Level zur Validierung einer Cloud-Strategie. Es schafft ein "Shared Understanding" zwischen Management-Wünschen und technischer Realität.
-2. **System Ebene:** Für IT-/Lösungsarchitekten in der Design-Phase *vor* der Cloud-Migration von "Mission-Critical" Systemen, um den perfekten, dokumentierbaren Kompromiss zu finden.
-
-**Das Deliverable:** Ein exportierbares Architektur-Entscheidungsdokument (ADR), das die getroffenen Kompromisse, Konflikte und expliziten "Accepted Risks" als Audit- und Argumentationsgrundlage dokumentiert.
+- **Live-Demo (statischer Demo-Modus):** https://samuelmayer02.github.io/sovereignty-trade-off-navigator/
+- **Repository:** https://github.com/samuelmayer02/sovereignty-trade-off-navigator
+- **Dokumentation:** [Wiki-Übersicht](wiki/Home.md) · [User Guide](wiki/User_Guide.md) · [Methodik](wiki/Methodology.md) · [Technical Guide](wiki/Technical_Guide.md)
 
 ---
 
-## 👤 Benutzer-Workflow
+## Einordnung und Zielgruppe
 
-Das Tool führt den Nutzer durch einen strukturierten Prozess zur Architekturbewertung:
+Der Zielkonflikt entsteht aus gegenläufigen Anforderungen: Regulatorik und Unternehmensstrategie fordern Unabhängigkeit von einzelnen Anbietern und Jurisdiktionen, während Verfügbarkeits- und Betriebsziele für den Bezug integrierter, anbieterspezifischer Dienste sprechen. Verteilte Systeme unterliegen dabei physikalischen und theoretischen Grenzen (CAP/PACELC), sodass sich beide Zielrichtungen nicht gleichzeitig maximieren lassen. Das Tool macht die verbleibenden Abwägungen explizit, statt sie in impliziten Annahmen zu belassen.
 
-### 1. Setup & Session Management
-Der Nutzer startet eine neue Analyse oder lädt eine bestehende Session. Jede Session wird in der Datenbank persistiert und kann jederzeit wieder aufgenommen werden.
+Der Navigator adressiert zwei Anwendungsebenen:
 
-### 2. Entscheidungsbäume (SEAL-Ermittlung)
-Durch grafische Entscheidungsbäume wird ermittelt, welches Souveränitäts-Level (**SEAL - Sovereignty Evaluation & Assurance Level**) für das Projekt notwendig ist. 
-*   **Mechanik**: Antworten in den Bäumen können direkt Souveränitäts-Anforderungen (z.B. "Datenverschlüsselung mit eigenem Schlüssel") aktivieren.
+1. **Strategische Ebene** (Enterprise-Architektur, Produktmanagement, Leitungsebene): Validierung einer Cloud-Strategie und Herstellung eines gemeinsamen Verständnisses zwischen strategischer Zielsetzung und technischer Realisierbarkeit.
+2. **Systemebene** (IT- und Lösungsarchitektur): Architekturentwurf vor der Migration geschäftskritischer Systeme, mit dem Ziel eines begründeten und dokumentierten Kompromisses.
 
-### 3. Funktionaler Anforderungskatalog
-Zusätzlich zu den automatisch gesetzten Souveränitäts-Anforderungen wählt der Nutzer aus einem Katalog (Kategorien wie Security, Resilienz, Ökonomie) weitere Projekt-Anforderungen aus.
-*   **Abhängigkeiten**: Das System erkennt exklusive Gruppen (z.B. "Entweder SaaS-API oder On-Premises Modell").
-
-### 4. Conflict Matrix (Trade-off Analyse)
-Dies ist das Herzstück des Tools. Das System vergleicht alle gewählten Anforderungen (Souveränität + Funktional) gegen eine hinterlegte Wissensdatenbank.
-*   **Anzeige**: Konflikte werden farblich markiert (Rot = Harter Konflikt, Orange = Trade-off).
-*   **Conflict Resolver**: Interaktive Abwägung der Anforderungen über eine Waage inklusive nachvollziehbarer Darstellung von Herkunft, Scores (*Strategische Relevanz*, *Umsetzungs-Risiko*) und Freitext-Begründungen aus Entscheidungsbäumen und Szenarien.
-*   **Lösung**: Zu jedem Konflikt werden Erläuterungen, Alternativen und Best-Practices angezeigt, um architektonische Lösungen zu finden oder Risiken begründet zu akzeptieren.
+**Ergebnis einer Sitzung** ist ein exportierbares Architekturentscheidungsdokument (Architecture Decision Record, ADR), das getroffene Kompromisse, identifizierte Konflikte und explizit akzeptierte Risiken für Audit- und Argumentationszwecke festhält.
 
 ---
 
-## ⚙️ Experten-Workflow (Editor)
+## Anwendungsablauf (sieben Schritte)
 
-Für Administratoren und Fachexperten bietet das Tool einen integrierten **No-Code Editor**:
-*   **Anforderungs-Management**: Hinzufügen, Bearbeiten und Löschen von Anforderungen, Kategorien und Gruppen.
-*   **Szenario-Editor**: Erstellung von Bewertungsszenarien zur Evaluierung von Projektkontexten.
-*   **Tree-Builder**: Visueller Editor für die Entscheidungsbäume.
-*   **Matrix-Pflege**: Direktes Setzen von Trade-offs zwischen Anforderungspaaren.
+Der Navigator führt durch einen strukturierten Bewertungsprozess. Ein übergreifendes Regelwerk stellt sicher, dass die Konfliktauflösung nicht übersprungen wird. Eine ausführliche Anleitung enthält der [User Guide](wiki/User_Guide.md).
 
-Der Editor ist über den Button "Editor öffnen" in der Navigationsleiste erreichbar.
+| Schritt | Phase | Inhalt |
+|---|---|---|
+| **1** | Setup | Systemname, Evaluationsziel (Soll-Architektur oder Ist-Architektur/Audit), Dokumentation des Status quo sowie Festlegung des System-Scopes. |
+| **2** | Souveränität | Entscheidungsbäume ermitteln das erforderliche Souveränitätsniveau (**SEAL** – Sovereignty Evaluation and Assurance Level). Antworten aktivieren Souveränitätsanforderungen und werden über Business Value und Technical Risk gewichtet. |
+| **3** | SOV-Ergebnis | Zusammenfassung der aktivierten Souveränitätsanforderungen. Der Konflikt-Interceptor blockiert den Fortschritt, solange Anforderungen einer Exklusiv-Gruppe einander widersprechen. |
+| **4** | Szenarien | Architekturszenarien stellen typische Abwägungen auf konzeptioneller Ebene dar. Die Auswahl wird bewertet und schriftlich begründet. |
+| **5** | Szenario-Ergebnis | Zusammenfassung der durch die Szenarien ausgelösten technischen Anforderungen, erneut mit Konflikt-Interceptor. |
+| **6** | Auswahl | Anforderungskatalog: automatisch abgeleitete Anforderungen sind zur Wahrung der Nachvollziehbarkeit gesperrt, weitere können manuell ergänzt werden. Widersprüche werden über die `ConflictCard` einschließlich Begründung aufgelöst. |
+| **7** | Analyse | Konfliktmatrix und Risikoregister: Alle aktiven Anforderungen werden paarweise gegen die Wissensbasis geprüft und farblich klassifiziert (rot = harter Konflikt, orange = Trade-off). Konflikte lassen sich im Conflict Resolver abwägen oder als akzeptiertes Risiko dokumentieren. Export als PDF oder JSON. |
 
 ---
 
-## 🏗️ Architektur & Datenkonzept
+## Redaktionsmodus (Editor)
 
-Das System verfolgt einen **AI-Native & Hybrid-Storage** Ansatz und wurde für **zwei Betriebsmodi** (Dual-Mode) entworfen:
-- **Produktions-Modus (Fullstack)**: Nutzung von SQLite und Next.js API Routen.
-- **Demo-Modus (Static Export)**: Reines Client-Side Hosting für GitHub Pages.
-👉 *Siehe detaillierte Dokumentation:* [Dual-Mode Architecture](wiki/dual-mode-architecture.md)
+Für Administratoren und Fachexperten steht ein integrierter Editor zur Verfügung, der die Pflege der Wissensbasis ohne Codeänderungen ermöglicht:
 
-### Das Bewertungsmodell: Von Konzept zu Technologie
-Das Tool erzwingt in der Benutzerführung eine bewusste Trennung zwischen Problemraum (Szenarien) und Lösungsraum (Architektur):
-* **Szenarien & Optionen (Problemraum):** Optionen werden auf reiner Konzeptebene (High-Level) formuliert, unter Verwendung etablierter Begriffe (z.B. *Multi-Region*, *Queues*, *Managed Services*), jedoch ohne stark anbieterspezifisches Buzzword-Bingo (z.B. AWS Lambda). Sie fokussieren sich auf den geschäftlichen oder operativen Trade-off der jeweiligen Situation.
-* **Requirements (Lösungsraum):** Die Translation in harte Technologie und konkrete Architekturmuster erfolgt erst durch das Mapping. Die konzeptionelle Entscheidung in einem Szenario triggert spezifische, technische Requirements (z.B. *Requirement: "Cloud-native Serverless (PaaS/FaaS)"*). 
-Dadurch bleiben Architekturentscheidungen fundiert am Geschäfts- und Souveränitätsziel ausgerichtet, während das System dem User komplexe Technologieentscheidungen verständlich übersetzt.
+- **Anforderungsverwaltung:** Anlegen, Bearbeiten und Löschen von Anforderungen, Kategorien und Gruppen.
+- **Szenario-Editor:** Erstellung von Bewertungsszenarien zur Abbildung von Projektkontexten.
+- **Tree-Builder:** Visuelle Bearbeitung der Entscheidungsbäume.
+- **Matrixpflege:** Direkte Festlegung von Trade-offs zwischen Anforderungspaaren.
 
-### Dual Source of Truth & Synchronisation
-*   **SQLite-Datenbank (`prisma/dev.db`)**: Primäre Laufzeit-Datenquelle. Das Frontend und alle APIs lesen und schreiben direkt in diese Datenbank.
-*   **JSON-Files (`/data/*.json`)**: Automatischer Export der DB bei jeder Änderung über die API. Dies ermöglicht die Versionierung der Fachdaten in Git und bietet KI-Agenten eine leicht lesbare Datenbasis.
+Der Editor ist über die Schaltfläche „Editor öffnen“ in der Navigationsleiste erreichbar. Details enthält der [Editors Guide](wiki/Editors_Guide.md).
+
+---
+
+## Architektur und Datenkonzept
+
+Die Anwendung ist für zwei Betriebsmodi ausgelegt:
+
+- **Produktionsmodus (Fullstack):** SQLite-Datenbank und dynamische Next.js-API-Routen.
+- **Demonstrationsmodus (Static Export):** Rein clientseitiges Hosting über GitHub Pages.
+
+Eine detaillierte Beschreibung enthält [Dual-Mode Architecture](wiki/dual-mode-architecture.md).
+
+### Trennung von Problem- und Lösungsraum
+
+Die Benutzerführung trennt bewusst zwischen Problemraum und Lösungsraum:
+
+- **Szenarien und Optionen (Problemraum):** Optionen werden auf konzeptioneller Ebene formuliert und nutzen etablierte, herstellerneutrale Begriffe (etwa Multi-Region, Queues, Managed Services). Anbieterspezifische Produktbezeichnungen werden vermieden, da im Problemraum der geschäftliche oder operative Trade-off im Vordergrund steht.
+- **Anforderungen (Lösungsraum):** Die Überführung in konkrete Technologien und Architekturmuster erfolgt erst über das Mapping. Eine konzeptionelle Entscheidung im Szenario löst spezifische technische Anforderungen aus (beispielsweise „Cloud-native Serverless (PaaS/FaaS)“).
+
+Damit bleiben Architekturentscheidungen an den Geschäfts- und Souveränitätszielen ausgerichtet, während das System die technischen Implikationen nachvollziehbar übersetzt.
+
+### Datenhaltung und Synchronisation
+
+- **SQLite-Datenbank (`prisma/dev.db`):** Primäre Laufzeitdatenquelle. Frontend und API-Routen lesen und schreiben ausschließlich hier. Die Datei wird nicht versioniert, sondern aus den JSON-Dateien erzeugt.
+- **JSON-Dateien (`data/*.json`):** Export der Datenbank bei jeder schreibenden API-Operation. Dies ermöglicht die Versionierung der Fachdaten in Git und stellt KI-Agenten eine lesbare Datenbasis bereit.
 
 > [!IMPORTANT]
-> **Wichtig für manuelle Änderungen an JSON-Dateien:**
-> Wenn Sie (oder ein KI-Agent) die JSON-Dateien im Ordner `data/` manuell verändern, werden diese Änderungen **nicht** automatisch in die SQLite-Datenbank übertragen. Da das Frontend ausschließlich die SQLite-Datenbank abfragt, kommen Änderungen in den JSON-Dateien erst nach einem manuellen Sync im Frontend an!
+> **Manuelle Änderungen an JSON-Dateien**
+> Manuelle Änderungen an den Dateien in `data/` werden **nicht** automatisch in die SQLite-Datenbank übernommen. Da das Frontend ausschließlich die Datenbank abfragt, wirken sie sich erst nach einem Import aus:
+> ```bash
+> npm run db:import
+> ```
+> Dies führt `scripts/sync-import.ts` mittels `tsx` aus.
 >
-> **So synchronisieren Sie die Datenbank:**
-> 1. **Standard-Befehl:**
->    ```bash
->    npm run db:import
->    ```
->    Dies führt das TypeScript-Skript `scripts/sync-import.ts` mittels `tsx` aus.
-> 2. **Fallback bei Sandbox-/Rechte-Problemen:**
->    In manchen Terminal- oder Sandbox-Umgebungen kann `tsx` aufgrund von Socket-Berechtigungsfehlern (`EPERM: operation not permitted` beim Erstellen von IPC-Pipes) fehlschlagen. Nutzen Sie in diesem Fall das vorkompilierte JavaScript-Skript:
->    ```bash
->    node scripts/sync-import.js
->    ```
->
-> **Nach dem Sync:**
-> Next.js nutzt aggressive Caching-Mechanismen. Wenn Sie die DB gesynct haben, aber die Änderungen im Browser noch nicht sehen:
-> * Machen Sie einen Hard-Refresh im Browser (`Cmd + Shift + R` bzw. `Strg + F5`).
-> * Starten Sie den Next.js-Dev-Server neu (`npm run dev`), um den Daten-Cache vollständig zu leeren.
+> Anschließend ist zu beachten, dass Next.js aggressiv zwischenspeichert. Falls Änderungen im Browser nicht erscheinen, empfiehlt sich ein Hard-Refresh (`Cmd + Shift + R` bzw. `Strg + F5`) oder ein Neustart des Entwicklungsservers.
 
-### Model Context Protocol (MCP) Server
-KI-Agenten können über den integrierten **MCP-Server** (`scripts/mcp-server.ts`) direkt mit der Datenbank interagieren. Dies ermöglicht automatisierte Pflege der Anforderungskataloge und der Konflikt-Matrix.
+### Model Context Protocol (MCP)
+
+Über den integrierten MCP-Server (`scripts/mcp-server.ts`) können KI-Agenten direkt mit der Datenbank interagieren. Dies ermöglicht die werkzeuggestützte Pflege des Anforderungskatalogs und der Konfliktmatrix mit schemavalidierten Operationen.
 
 ---
 
-## 🛠️ Betrieb für Administratoren
+## Betrieb
+
+### Voraussetzungen
+
+Node.js ab Version 20.9 (Anforderung von Next.js 16). Getestet mit Node 20 (CI und Docker) sowie Node 24 (lokal).
 
 ### Installation
+
 ```bash
 npm install
 npx prisma db push
 npm run db:seed
 ```
 
-### Wichtige Scripts
-*   `npm run dev`: Startet die Anwendung auf `http://localhost:3000`.
-*   `npm run test`: **WICHTIG!** Führt Integrationstests für den MCP-Server und den Daten-Sync aus. Muss nach jeder Änderung am Schema ausgeführt werden.
-*   `npm run db:import`: Importiert manuelle Änderungen aus JSON-Dateien zurück in die Datenbank.
-*   `npm run mcp:start`: Startet den MCP-Server (für Agenten-Interaktion).
+### Verfügbare Skripte
 
-### Datenbank-Wartung
-Nutzen Sie `npx prisma studio`, um die Daten grafisch in der Datenbank zu bearbeiten oder die Relationen zu prüfen.
+- `npm run dev` – startet die Anwendung unter `http://localhost:3000`.
+- `npm run test` – führt die Integrationstests für MCP-Server, Datensynchronisation, Store und API-Client aus (Vitest). Nach Änderungen am Schema zwingend erforderlich.
+- `npm run test:e2e` – führt die Playwright-End-to-End-Tests (`tests/*.spec.ts`) aus. Der Entwicklungsserver wird automatisch gestartet; einmalig ist `npx playwright install chromium` erforderlich.
+- `npm run db:import` – überträgt manuelle Änderungen aus den JSON-Dateien in die Datenbank.
+- `npm run mcp:start` – startet den MCP-Server für die Agenteninteraktion.
+- `npm run build:static` – erzeugt den statischen Demonstrations-Build.
 
-### Bootstrapping (Konflikt-Matrix & Heatmap)
-Um die Trade-off-Matrix (Requirement vs. Requirement) und die Architektur-Heatmap (Requirement vs. Kategorie) initial oder nach Änderungen automatisiert und wissenschaftlich fundiert evaluieren zu lassen, stehen zwei Methoden zur Verfügung: 
-1. Ein **lokaler Coding Agent (Antigravity)** via MCP (empfohlen)
-2. Ein automatisiertes **TypeScript-Skript** via LLM API
+### Datenbankwartung
 
-Beide Methoden bewerten unbewertete Paare auf Basis von 8 definierten Trade-off-Konflikten (TCs) aus der zugrundeliegenden Thesis.
+`npx prisma studio` stellt eine grafische Oberfläche zur Bearbeitung der Daten und zur Prüfung der Relationen bereit.
 
-#### Variante 1: Lokaler Agent (Antigravity via MCP) - Empfohlen
-Diese Methode nutzt die Ressourcen deines lokalen Coding-Agenten (z. B. Google Antigravity), ohne dass externe API-Kosten anfallen. Der Agent liest einen versionierten Prompt und schreibt die Ergebnisse über das Model Context Protocol (MCP) direkt in die Datenbank.
+### Erweiterung der Konfliktmatrix
 
-**Voraussetzungen:**
-1. Füge den lokalen MCP-Server in deine Agenten-Konfiguration ein (z.B. in der `~/.gemini/config/mcp.json` oder der IDE):
-   - **Name:** `master-matrix-server`
-   - **Command:** `/absoluter/pfad/zu/master-matrix/scripts/start-mcp.sh`
-   - **Args:** *(leer lassen oder leeres Array)*
+Die Konfliktmatrix umfasst im ausgelieferten Datenstand alle 4.465 Paare der 95 Anforderungen. Wird der Anforderungskatalog erweitert, entstehen unbewertete Paare, die über einen lokalen Coding-Agenten und den MCP-Server ergänzt werden können.
 
-   > [!TIP]
-   > Wir nutzen bewusst das Wrapper-Skript `start-mcp.sh` anstelle des direkten Aufrufs. Es stellt sicher, dass beim Start aus dem Agenten-Kontext die korrekte Node.js-Umgebung (z.B. über `nvm`) geladen wird. Das verhindert zuverlässig Abstürze ("EOF") von Native-Addons (wie `better-sqlite3`), falls das System auf eine andere Node-Version zeigt.
-2. Stelle sicher, dass das **Matrix Evaluator Plugin** aktiv ist (siehe `.gemini/config/plugins/matrix-evaluator-plugin`).
+Maßgeblich ist der versionierte Prompt [`prompts/evaluation_v3.md`](prompts/evaluation_v3.md); [`prompts/evaluation_v2.md`](prompts/evaluation_v2.md) ist als frühere Fassung zu Vergleichszwecken archiviert. Die Bewertung erfolgt anhand der acht Trade-off-Konflikte (TC-1 bis TC-8) aus der zugrundeliegenden Arbeit.
 
-**Ausführen:**
-Du kannst deinen Agenten anweisen, die Matrix oder die Heatmap zu evaluieren:
-- **Für die Req-to-Req Matrix:** *"Nutze den `matrix-evaluator` Skill und bewerte die nächsten 10 Konflikte."* (Nutzt `prompts/evaluation_v1.md`)
-- **Für die Req-to-Category Heatmap:** *"Starte den `heatmap-evaluator` und werte die nächsten Impacts aus."* (Nutzt `prompts/category_impact_v1.md`)
+**Einrichtung:** Der MCP-Server wird in der Konfiguration des Agenten registriert (etwa `~/.claude.json`, `~/.gemini/config/mcp.json` oder in der IDE):
 
-Beide Skills speichern die Ergebnisse automatisch über die zugehörigen MCP-Tools in die Datenbank.
+- **Name:** `sovereignty-navigator-server`
+- **Command:** `<absoluter-pfad-zum-repository>/scripts/start-mcp.sh`
+- **Args:** leer
+
+> [!TIP]
+> Das Wrapper-Skript `start-mcp.sh` wird dem direkten Aufruf vorgezogen, da es die korrekte Node.js-Umgebung (etwa über `nvm`) lädt. Andernfalls kann es bei abweichender Node-Version zu Abbrüchen nativer Erweiterungen wie `better-sqlite3` kommen.
+
+**Durchführung:** Der Agent wird angewiesen, nach `prompts/evaluation_v3.md` zu verfahren, beispielsweise: „Arbeite nach `prompts/evaluation_v3.md` und bewerte die nächsten zehn unbewerteten Konflikte.“ Der Agent ruft dabei `get_unrated_conflicts` auf, bewertet die Paare und speichert das Ergebnis über `batch_update_conflicts`. Die JSON-Dateien in `data/` werden automatisch mitgeschrieben.
 
 > [!NOTE]
-> **Skript-Fallback für Agenten**
-> Sollte der MCP-Server in einer Sandbox-Umgebung blockiert werden, sind Agenten instruiert, stattdessen das Skript `npx tsx scripts/run-mcp-tool.ts <ToolName>` als sicheren Fallback zu verwenden.
-
-#### Variante 2: TypeScript-Skript via LLM API
-Sie benötigen einen API-Key für eine OpenAI-kompatible Schnittstelle. Das Skript unterstützt verschiedene Modelle und passt spezielle Parameter (wie "Thinking") dynamisch an den Modellnamen an.
-
-Erstellen Sie dazu eine `.env` Datei im Hauptverzeichnis. Hier sind Konfigurationsbeispiele für verschiedene Anbieter:
-
-**Option 1: DeepSeek (via NVIDIA API)**
-```env
-LLM_API_KEY="nvapi-IhrKey"
-LLM_API_URL="https://integrate.api.nvidia.com/v1"
-LLM_MODEL="deepseek-ai/deepseek-v4-pro"
-BATCH_SIZE="20"
-```
-
-**Option 2: NVIDIA Nemotron**
-```env
-LLM_API_KEY="nvapi-IhrKey"
-LLM_API_URL="https://integrate.api.nvidia.com/v1"
-LLM_MODEL="nvidia/nemotron-3-ultra-550b-a55b"
-BATCH_SIZE="5" # Empfohlen niedriger wegen hoher Denkzeit
-```
-
-**Option 3: OpenAI (GPT-4o)**
-```env
-LLM_API_KEY="sk-IhrOpenAiKey"
-LLM_API_URL="https://api.openai.com/v1"
-LLM_MODEL="gpt-4o"
-BATCH_SIZE="20"
-```
-
-**Option 4: Google Gemini (via OpenAI Kompatibilitäts-Layer)**
-```env
-LLM_API_KEY="AIzaSy-IhrGeminiKey"
-LLM_API_URL="https://generativelanguage.googleapis.com/v1beta/openai/"
-LLM_MODEL="gemini-2.5-pro"
-BATCH_SIZE="20"
-```
-
-**Skript ausführen:**
-```bash
-npx tsx scripts/bootstrap-impacts.ts
-```
-
-Das Skript ist idempotent und nutzt ein Batching-System. Wenn es abbricht (z. B. durch Rate-Limits), kann es einfach neu gestartet werden und macht an der letzten unbewerteten Stelle weiter. Anschließend werden die JSON-Dateien im Ordner `data/` automatisch synchronisiert.
+> Wird der MCP-Server in einer eingeschränkten Umgebung blockiert, steht `npx tsx scripts/run-mcp-tool.ts <ToolName> '<JSON-Argumente>'` als Alternative zur Verfügung.
+>
+> Sämtliche Schreibpfade normalisieren den Konfliktstatus über `lib/conflict-status.ts` auf Kleinschreibung, da die Prompts Großschreibung vorgeben, die Oberfläche jedoch `red`, `orange`, `green` und `blue` erwartet.
 
 ---
 
-## 🚀 Technologien
-*   **Next.js 16** (App Router)
-*   **Prisma ORM** & **SQLite**
-*   **Vitest** (Integrationstests)
-*   **MCP SDK** (Agentic AI Support)
-## 💾 Sessions & Export
-Das Tool speichert alle Benutzereingaben lokal.
-Sobald Sie in Schritt 1 einen Analysenamen eingeben, generiert das System eine JSON-Datei im Ordner `/data/sessions/`. 
-Sie können den aktuellen Stand jederzeit als Datei exportieren und später an einem anderen Computer (oder durch einen Kollegen) über den Button **"Session importieren"** wieder hochladen.
+## Sitzungen und Export
 
-### 📝 Case Study Experten-Evaluation
-Für die Durchführung der Case Study steht ein dediziertes Evaluationsformular zur Verfügung. Dieses ist als eigenständige statische HTML-Datei implementiert und unter `public/evaluation.html` abgelegt.
-- **Aufruf:** Öffnen Sie `public/evaluation.html` direkt im Browser (z. B. per Doppelklick) oder über `http://localhost:3000/evaluation.html` bei laufendem Next.js-Dev-Server.
-- **Hauptfunktionen:**
-  - Umschaltbar zwischen **Phase 1 (Vorbereitungsphase - Fragebogen A)** und **Phase 2 (Abstimmungsphase - Fragebogen B)**.
-  - Automatisches Speichern im LocalStorage zur Verhinderung von Datenverlust bei Tab-Wechseln.
-  - Daten-Export als JSON oder CSV.
-  - **LaTeX & Markdown Integration:** Generiert fertigen LaTeX-Tabellencode (mit ausgefüllten Spalten auf Basis der Antworten, passend für `10_case_study.tex`) sowie Markdown-Tabellen zum Kopieren.
-  - **Daten-Import:** Ermöglicht das Wiederladen bereits ausgefüllter JSON-Antworten zur Ansicht oder Korrektur.
+Der Arbeitsstand einer Analyse wird an zwei Stellen gehalten:
 
----
+- **Browser (LocalStorage):** Der vollständige Zustand des Assistenten wird laufend im Browser persistiert (Zustand-`persist`), sodass ein Neuladen den Fortschritt erhält. Im Demonstrationsmodus ist dies der einzige Speicherort.
+- **Datenbank (Produktionsmodus):** Zusätzlich wird die Sitzung über `POST /api/save-session` in der Tabelle `Session` abgelegt.
 
----
+Über „Export“ in der Navigationsleiste lässt sich der aktuelle Stand als JSON-Datei sichern und über „Import“ an anderer Stelle wieder einspielen.
 
-## 🐳 Starten mit Docker (Empfohlen)
+### Erhebungsinstrument der Fallstudie
 
-Die Anwendung kann einfach und isoliert via Docker Compose betrieben werden.
+Für die Durchführung der Fallstudie steht ein eigenständiges Evaluationsformular als statische HTML-Datei unter `public/evaluation.html` bereit.
 
-1. Erstellen Sie eine `.env` Datei basierend auf der Vorlage:
-   ```bash
-   cp .env.example .env
-   ```
-   *Tragen Sie Ihre Konfiguration (z. B. `LLM_API_KEY`) in die `.env` Datei ein.*
-
-2. Starten Sie den Container:
-   ```bash
-   docker-compose up -d --build
-   ```
-
-3. Öffnen Sie `http://localhost:3000` im Browser.
-
-Die SQLite-Datenbank (`prisma/dev.db`) und die JSON-Daten (`data/`) werden über Docker-Volumes auf dem Host persistiert.
+- **Aufruf:** direkt im Browser oder über `http://localhost:3000/evaluation.html` bei laufendem Entwicklungsserver.
+- **Funktionsumfang:**
+  - Umschaltung zwischen Phase 1 (Vorbereitungsphase, Fragebogen A) und Phase 2 (Abstimmungsphase, Fragebogen B).
+  - Automatische Zwischenspeicherung im LocalStorage zur Vermeidung von Datenverlust.
+  - Datenexport als JSON oder CSV.
+  - Erzeugung von LaTeX-Tabellencode sowie Markdown-Tabellen zur direkten Übernahme.
+  - Import bereits ausgefüllter JSON-Antworten zur Ansicht oder Korrektur.
 
 ---
 
-## 🚀 Lokale Entwicklung (Ohne Docker)
-
-Stellen Sie sicher, dass Node.js (v18+) installiert ist.
-
-1. Abhängigkeiten installieren:
-   ```bash
-   npm install
-   ```
-
-2. Entwicklungsserver starten:
-   ```bash
-   npm run dev
-   ```
-
-3. Öffnen Sie `http://localhost:3000` im Browser.
-
----
-
-## 🧠 Empfohlene Skills & Agenten-Werkzeuge
-
-Dieses Projekt ist für die Zusammenarbeit mit modernen AI-Coding-Assistenten (wie Google Antigravity) optimiert. Es wird dringend empfohlen, den folgenden Skill zu installieren, um eine hochgradig kontextsensitive und token-schonende Entwicklungs-Erfahrung zu ermöglichen.
-
-### 📊 Graphify (Wissensgraph & GraphRAG)
-
-**Graphify** analysiert die gesamte Codebasis sowie alle vorliegenden Dokumente (wie das europäische *Cloud Sovereignty Framework* im Ordner `masterarbeit-context/`) und baut einen persistenten, interaktiven Wissensgraphen auf. Dies ermöglicht Agenten, Architekturmuster, Abhängigkeiten und Querverbindungen auf einen Blick zu verstehen, ohne den gesamten Code einlesen zu müssen.
-
-#### 🔧 Installation
-Führen Sie die folgenden Befehle in Ihrem Terminal aus, um den CLI-Dienst und den Google Antigravity-Skill zu registrieren:
+## Ausführung mit Docker
 
 ```bash
-# 1. CLI und Python-Bibliothek installieren (macOS / Linux)
+docker-compose up -d --build
+```
+
+Anschließend ist die Anwendung unter `http://localhost:3000` erreichbar. Die SQLite-Datenbank (`prisma/dev.db`) und die JSON-Daten (`data/`) werden über Docker-Volumes auf dem Host persistiert. Eine `.env`-Datei ist optional und dient lediglich der Überschreibung von `DATABASE_URL` (Vorlage: `.env.example`).
+
+---
+
+## Lokale Entwicklung ohne Docker
+
+```bash
+npm install
+npx prisma db push
+npm run db:seed
+npm run dev
+```
+
+Die Anwendung ist anschließend unter `http://localhost:3000` erreichbar.
+
+---
+
+## Betriebsmodi und Deployment
+
+1. **Produktionsmodus (lokal oder Docker):** Next.js mit dynamischen API-Routen, Prisma ORM und SQLite.
+2. **Demonstrationsmodus (GitHub Pages):** Rein clientseitiger Build ohne Backend. Die Daten werden aus statischen JSON-Dateien geladen; der siebenstufige Ablauf ist vollständig nutzbar, schreibende Operationen des Editors sind deaktiviert.
+
+Statischen Build lokal erzeugen:
+
+```bash
+npm run build:static
+```
+
+Das Skript kopiert `data/*.json` nach `public/data/` (nicht versioniert, wird bei jedem Build neu erzeugt), blendet `app/api` temporär aus und stellt das Verzeichnis anschließend automatisch wieder her. Weitere Details enthält [wiki/dual-mode-architecture.md](wiki/dual-mode-architecture.md).
+
+Das Deployment auf GitHub Pages erfolgt automatisiert über `.github/workflows/deploy.yml` bei jedem Push auf `main`.
+
+---
+
+## Technologiestack
+
+- **Next.js 16** (App Router) und **React 19**
+- **Prisma ORM 7** mit **SQLite** (`better-sqlite3`-Adapter)
+- **TailwindCSS 4**, **Zustand** (State Management), **React Flow** (Entscheidungsbäume)
+- **Vitest** (Integrationstests) und **Playwright** (End-to-End-Tests)
+- **MCP SDK** (Agentenanbindung)
+
+---
+
+## Optionales Werkzeug: Graphify
+
+Optional kann **Graphify** eingesetzt werden. Das Werkzeug analysiert die Codebasis und erzeugt einen persistenten Wissensgraphen, über den Agenten Architekturmuster und Abhängigkeiten erfassen können, ohne den vollständigen Quelltext einzulesen.
+
+```bash
 pip install graphifyy --break-system-packages
-
-# 2. Skill für Google Antigravity registrieren
 graphify install --platform antigravity
 ```
 
-#### 🚀 Verwendung
+Der Befehl `/graphify` erzeugt anschließend das nicht versionierte Verzeichnis `graphify-out/` mit einer interaktiven Visualisierung (`graph.html`), einem Bericht (`GRAPH_REPORT.md`) und der Wissensbasis (`graph.json`). Aktualisierung erfolgt über `graphify update .`, Abfragen über `graphify query "<Frage>"`.
 
-1. **Wissensgraphen erstellen oder aktualisieren:**
-   Geben Sie in Ihrem AI-Assistenten einfach den Slash-Befehl ein:
-   ```
-   /graphify
-   ```
-   Dies scannt das Projekt und erstellt im Ordner `graphify-out/` folgende Ausgaben:
-   * `graph.html`: Eine interaktive 3D-Visualisierung des Graphen im Browser.
-   * `GRAPH_REPORT.md`: Ein verständlicher Bericht über die wichtigsten Komponenten (God Nodes) und überraschende Querverbindungen.
-   * `graph.json`: Die persistente Wissensdatenbank für RAG-Abfragen.
-
-2. **Inkrementelle Updates (nach Code-Änderungen):**
-   Wenn Sie Code refaktoriert oder umgeschrieben haben, können Sie den Graphen blitzschnell und ohne LLM-Kosten (über AST-Analyse) aktualisieren:
-   ```bash
-   graphify update .
-   ```
-
-3. **Fragen an den Graphen stellen (Cross-Session RAG):**
-   Sie oder AI-Agenten können direkte Fragen zur Systemarchitektur stellen:
-   ```bash
-   graphify query "Welche Komponenten greifen auf selectedRequirements zu und wie hängen sie zusammen?"
-   ```
+Graphify ist für Betrieb und Bewertung der Anwendung nicht erforderlich.
 
 ---
 
-## 🌐 Dual-Mode Deployment (Static Demo vs. Fullstack)
+## Lizenz und Datenquellen
 
-Die Anwendung unterstützt zwei Betriebsmodi:
-1. **Fullstack-Modus (Lokal / Docker):** Next.js mit dynamischen API-Routen, Prisma ORM und SQLite.
-2. **Statischer Demo-Modus (GitHub Pages):** Rein clientseitiger Build ohne Node/DB-Backend. Daten werden über statische JSON-Dateien aus `/data/` geladen; der 7-Schritte-Navigator ist vollständig interaktiv nutzbar.
+Der Quellcode steht unter der MIT-Lizenz, siehe [LICENSE](LICENSE).
 
-*   **Statischen Build lokal erzeugen:**
-    ```bash
-    npm run build:static
-    ```
-*   **Architektur-Tests ausführen:**
-    ```bash
-    npm test
-    ```
-*   Weitere Details finden sich in [wiki/dual-mode-architecture.md](wiki/dual-mode-architecture.md).
-
-
+Die Datei `data/Cloud-Sovereignty-Framework.pdf` ist ein externes Referenzdokument der Europäischen Kommission und diente als methodische Quelle für die Herleitung der Anforderungskategorien. Sie unterliegt den Nutzungsbedingungen des Herausgebers und ist nicht Bestandteil der MIT-Lizenzierung.

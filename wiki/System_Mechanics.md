@@ -1,13 +1,16 @@
-# System-Mechaniken: Unter der Haube
+# System-Mechaniken
 
-Um das Tool effektiv zu nutzen und weiterzuentwickeln, ist ein Verständnis der internen System-Mechaniken unerlässlich. Das System operiert primär über State-Management und Querverweise.
+Für Nutzung und Weiterentwicklung des Werkzeugs ist ein Verständnis der internen Mechaniken erforderlich. Das System operiert primär über State-Management und Querverweise zwischen Anforderungen.
 
 ## Konfliktauflösung & Konflikttypen
 
-Konflikte existieren in der Datenbank (`conflict_matrix.json`) zwischen Paaren von Requirements (`pair`). Das System unterscheidet primär zwei Schweregrade:
+Konflikte existieren in der Datenbank (exportiert nach `conflict_matrix.json`) zwischen Paaren von Requirements (`pair`). Das System kennt vier Status – `red`, `orange`, `green` und `blue` –, von denen die ersten beiden Handlungsbedarf auslösen. Die Status werden auf allen Schreibpfaden über `lib/conflict-status.ts` kleingeschrieben normalisiert:
 *   **Rot (Harter Konflikt):** Fundamental inkompatibel (z. B. "Managed Container EKS/AKS" vs "Volle Lieferkettentransparenz", "Managed Container EKS/AKS" vs "Autarker SRE-Eigenbetrieb", "Erweiterte Compliance BSI C5/SecNumCloud" vs "Managed Container EKS/AKS", "Air-Gapped Backups" vs "Site-to-Site VPN"). Eine technische oder rechtliche Umsetzung ist konzeptionell oder vertraglich ausgeschlossen.
 *   **Orange (Weicher Trade-off):** Realisierbar, erzeugt aber Reibung oder erhebliche Markteinschränkungen (z. B. "Multi-Region Architektur" vs "Kausale/Sequentielle Konsistenz", "Sovereign Backup Landing Zone" vs "Cross-Provider Backup").
+*   **Grün (Synergie):** Die Anforderungen begünstigen sich gegenseitig.
 *   **Blau (Neutral / Kein Konflikt):** Kein architektonischer Widerspruch (z. B. "Offene Storage-APIs" vs "SSE-KMS / BYOK", da Server-Side Encryption mit Kunden-KMS In-Memory-Processing erlaubt).
+
+Paare ohne Eintrag werden in der Matrix grau dargestellt. Im ausgelieferten Datenstand sind alle 4.465 Paare der 95 Anforderungen bewertet.
 
 In der Trade-off Matrix (Step 7) können Nutzer auf diese Konflikte klicken und sie als **"Akzeptiertes Risiko"** markieren (`acceptRisk` im State). Dazu muss zwingend ein Rationale (Begründung) eingegeben werden. Dies ist essentiell für die Auditierbarkeit.
 
@@ -23,7 +26,7 @@ Während `conflict_matrix.json` *generelle* technische Reibungen aufzeigt, greif
 
 ## Bewertung und Priorisierung (Dynamische Metriken)
 
-Die Zeiten, in denen Nutzer "Alles ist wichtig" auswählen konnten, sind durch die dynamische Prioritätsberechnung vorbei.
+Die dynamische Prioritätsberechnung verhindert eine undifferenzierte Gleichgewichtung aller Anforderungen.
 
 In den Szenarien und Entscheidungsbäumen müssen Schieberegler für **Business Value (BV)** (Geschäftsnutzen) und **Technical Risk (TR)** (Risiko) auf einer Skala von 1-10 gesetzt werden.
 
