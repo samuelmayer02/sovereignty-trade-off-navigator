@@ -29,6 +29,7 @@ export default function Step6Selection() {
   } = useStore()
   
   const [alertMessage, setAlertMessage] = useState<{title: string, message: string} | null>(null);
+  const [overrideConfirm, setOverrideConfirm] = useState<{title: string, message: string, onConfirm: () => void} | null>(null);
 
   // Scroll to top on mount
   useEffect(() => {
@@ -237,16 +238,15 @@ export default function Step6Selection() {
     
     const priority = typeof rawPriority === 'number' ? rawPriority : 5;
 
+    // Hard-disabled: another group mate was picked manually - user must deselect it first.
+    // A mate locked via tree/scenario does NOT hard-disable the card: it must stay clickable
+    // so the user can reach the override-confirmation dialog below.
     let isDisabled = false;
     if (req.groupId && !isSelected) {
       const group = allGroups.find((g: any) => g.id === req.groupId);
       if (group && group.type === 'exclusive') {
         const groupMates = allReqs.filter((r: any) => r.groupId === req.groupId && r.uid !== req.uid);
-        isDisabled = groupMates.some((mate: any) => 
-          selectedRequirements[mate.uid] !== undefined || 
-          selectedSovereigntyReqs[mate.uid] !== undefined || 
-          selectedScenarioReqs[mate.uid] !== undefined
-        );
+        isDisabled = groupMates.some((mate: any) => selectedRequirements[mate.uid] !== undefined);
       }
     }
 
@@ -260,16 +260,18 @@ export default function Step6Selection() {
         )}
         onClick={() => {
           if (isTreeSelected) {
-            setAlertMessage({
-              title: "Aktion nicht möglich",
-              message: "Diese Anforderung wurde automatisch durch die Entscheidungsbäume (Schritt 2) festgelegt. Gehe zurück, um deine Antworten im Baum anzupassen."
+            setOverrideConfirm({
+              title: "Automatisch gesetzte Anforderung überschreiben?",
+              message: `Diese Anforderung wurde automatisch durch deine Antworten in den Entscheidungsbäumen (Schritt 2) aktiviert und ist Teil des daraus ermittelten SEAL-Levels. Wenn du sie hier deaktivierst, wird das SEAL-Level selbst NICHT rückwirkend angepasst – es kann dadurch nicht mehr exakt zu deiner Anforderungsauswahl passen. Möchtest du sie trotzdem deaktivieren?`,
+              onConfirm: () => removeSovereigntyReq(req.uid)
             });
             return;
           }
           if (isScenarioSelected) {
-            setAlertMessage({
-              title: "Aktion nicht möglich",
-              message: "Diese Anforderung wurde durch deine Szenario-Bewertungen (Schritt 4) festgelegt. Gehe zurück, um das entsprechende Szenario anzupassen."
+            setOverrideConfirm({
+              title: "Automatisch gesetzte Anforderung überschreiben?",
+              message: `Diese Anforderung wurde durch deine Szenario-Bewertungen (Schritt 4) aktiviert. Wenn du sie hier deaktivierst, wird das zugehörige Szenario-Ergebnis nicht rückwirkend angepasst – es kann dadurch nicht mehr exakt zu deiner Anforderungsauswahl passen. Möchtest du sie trotzdem deaktivieren?`,
+              onConfirm: () => removeScenarioReq(req.uid)
             });
             return;
           }
@@ -280,17 +282,25 @@ export default function Step6Selection() {
               const groupMates = allReqs.filter(r => (r as any).groupId === req.groupId && r.uid !== req.uid);
               const lockedSovMate = groupMates.find(mate => selectedSovereigntyReqs[mate.uid] !== undefined);
               if (lockedSovMate) {
-                setAlertMessage({
-                  title: "Konflikt in Entweder/Oder-Gruppe",
-                  message: `Du kannst diese Anforderung nicht auswählen, da die Entweder/Oder-Gruppe "${group.name}" bereits durch die Bäume (Anforderung: ${getDisplayId(lockedSovMate.uid)}) belegt ist.`
+                setOverrideConfirm({
+                  title: "Entweder/Oder-Gruppe überschreiben?",
+                  message: `Die Entweder/Oder-Gruppe "${group.name}" ist aktuell durch "${lockedSovMate.name}" (${getDisplayId(lockedSovMate.uid)}) belegt, die automatisch durch die Entscheidungsbäume (Schritt 2) gesetzt wurde und Teil des daraus ermittelten SEAL-Levels ist. Wenn du stattdessen "${req.name}" wählst, wird das SEAL-Level selbst NICHT rückwirkend angepasst – es kann dadurch nicht mehr exakt zu deiner Anforderungsauswahl passen. Möchtest du die Auswahl trotzdem wechseln?`,
+                  onConfirm: () => {
+                    removeSovereigntyReq(lockedSovMate.uid);
+                    toggleRequirement(req.uid);
+                  }
                 });
                 return;
               }
               const lockedScenMate = groupMates.find(mate => selectedScenarioReqs[mate.uid] !== undefined);
               if (lockedScenMate) {
-                setAlertMessage({
-                  title: "Konflikt in Entweder/Oder-Gruppe",
-                  message: `Du kannst diese Anforderung nicht auswählen, da die Entweder/Oder-Gruppe "${group.name}" bereits durch ein Szenario (Anforderung: ${getDisplayId(lockedScenMate.uid)}) belegt ist.`
+                setOverrideConfirm({
+                  title: "Entweder/Oder-Gruppe überschreiben?",
+                  message: `Die Entweder/Oder-Gruppe "${group.name}" ist aktuell durch "${lockedScenMate.name}" (${getDisplayId(lockedScenMate.uid)}) belegt, die durch deine Szenario-Bewertungen (Schritt 4) gesetzt wurde. Wenn du stattdessen "${req.name}" wählst, wird das zugehörige Szenario-Ergebnis nicht rückwirkend angepasst – es kann dadurch nicht mehr exakt zu deiner Anforderungsauswahl passen. Möchtest du die Auswahl trotzdem wechseln?`,
+                  onConfirm: () => {
+                    removeScenarioReq(lockedScenMate.uid);
+                    toggleRequirement(req.uid);
+                  }
                 });
                 return;
               }
@@ -388,6 +398,46 @@ export default function Step6Selection() {
                   className="bg-background hover:bg-card border border-card-border px-6 py-2 rounded-lg font-medium transition-colors"
                 >
                   Verstanden
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {overrideConfirm && (
+          <div key="override-confirm-backdrop" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-card border border-warning/30 shadow-2xl rounded-2xl max-w-md w-full overflow-hidden"
+            >
+              <div className="p-6">
+                <div className="flex items-center space-x-3 text-warning mb-4">
+                  <AlertTriangle className="w-6 h-6" />
+                  <h3 className="text-lg font-bold">{overrideConfirm.title}</h3>
+                </div>
+                <p className="text-muted leading-relaxed text-sm">
+                  {overrideConfirm.message}
+                </p>
+              </div>
+              <div className="bg-muted/10 px-6 py-4 flex justify-end gap-3">
+                <button
+                  onClick={() => setOverrideConfirm(null)}
+                  className="bg-background hover:bg-card border border-card-border px-5 py-2 rounded-lg font-medium transition-colors text-sm"
+                >
+                  Abbrechen
+                </button>
+                <button
+                  onClick={() => {
+                    overrideConfirm.onConfirm();
+                    setOverrideConfirm(null);
+                  }}
+                  className="bg-warning hover:bg-warning/90 text-white px-5 py-2 rounded-lg font-medium transition-colors text-sm"
+                >
+                  Trotzdem überschreiben
                 </button>
               </div>
             </motion.div>
@@ -510,7 +560,7 @@ export default function Step6Selection() {
               {category === 'Souveränität' && (
                 <div className="mb-6 -mt-2 p-4 bg-primary/5 border border-primary/20 rounded-xl">
                   <p className="text-sm text-muted">
-                    <span className="font-bold text-primary">Hinweis:</span> Mit 🔒 markierte Anforderungen wurden automatisch auf Basis deiner Angaben in den Entscheidungsbäumen oder Szenarien ausgewählt. Du kannst ihre Priorität anpassen, aber um sie zu deaktivieren, musst du deine Antworten zuvor ändern. Du kannst hier zusätzlich weitere Anforderungen manuell hinzufügen.
+                    <span className="font-bold text-primary">Hinweis:</span> Mit 🔒 markierte Anforderungen wurden automatisch auf Basis deiner Angaben in den Entscheidungsbäumen oder Szenarien ausgewählt. Du kannst ihre Priorität anpassen, oder sie hier bei Bedarf überschreiben – du wirst dabei gewarnt, falls das Auswirkungen auf das ermittelte SEAL-Level haben kann. Du kannst hier zusätzlich weitere Anforderungen manuell hinzufügen.
                   </p>
                 </div>
               )}
