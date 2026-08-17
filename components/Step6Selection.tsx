@@ -238,16 +238,15 @@ export default function Step6Selection() {
     
     const priority = typeof rawPriority === 'number' ? rawPriority : 5;
 
+    // Hard-disabled: another group mate was picked manually - user must deselect it first.
+    // A mate locked via tree/scenario does NOT hard-disable the card: it must stay clickable
+    // so the user can reach the override-confirmation dialog below.
     let isDisabled = false;
     if (req.groupId && !isSelected) {
       const group = allGroups.find((g: any) => g.id === req.groupId);
       if (group && group.type === 'exclusive') {
         const groupMates = allReqs.filter((r: any) => r.groupId === req.groupId && r.uid !== req.uid);
-        isDisabled = groupMates.some((mate: any) => 
-          selectedRequirements[mate.uid] !== undefined || 
-          selectedSovereigntyReqs[mate.uid] !== undefined || 
-          selectedScenarioReqs[mate.uid] !== undefined
-        );
+        isDisabled = groupMates.some((mate: any) => selectedRequirements[mate.uid] !== undefined);
       }
     }
 
